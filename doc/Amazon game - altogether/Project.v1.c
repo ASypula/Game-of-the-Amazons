@@ -470,7 +470,7 @@ int main()
     int i = 0;
     for ( i; i < number_of_players; i++) {
         printf("player %d. Enter your name: \n", i + 1);
-        scanf("%s", &(player[i].name));
+        scanf("%s", player[i].name);
         player[i].ID = i + 1;
         player[i].points = 0;
     }
