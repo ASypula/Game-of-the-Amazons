@@ -5,6 +5,7 @@
 #define FREE 0
 #define OCCUPIED 1
 #define MISSILE 9
+#define MAX_NUMBER_OF_PLAYERS 8
 
 /* structure describing one tile */
 typedef struct tile {
@@ -465,11 +466,11 @@ int main()
         scanf("%d", &number_of_players);
     } while (number_of_players > 8);
 
-    player_data player[number_of_players];
+    player_data player[MAX_NUMBER_OF_PLAYERS];
     int i = 0;
     for ( i; i < number_of_players; i++) {
         printf("player %d. Enter your name: \n", i + 1);
-        scanf("%s", player[i].name);
+        scanf("%s", &(player[i].name));
         player[i].ID = i + 1;
         player[i].points = 0;
     }
