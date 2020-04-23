@@ -191,29 +191,6 @@ void generate_board(struct tile** board, int* m, int* n) {
     }
 }
 
-//Randomizing contents of each tile
-tile generate_tile() {
-    int chance_t, chance_a;
-    tile x;
-    chance_t = rand() % 2;
-    if (chance_t == 1) {
-        x.treasure = (rand() % 5) + 1;
-    }
-    else {
-        x.treasure = 0;
-    }
-    chance_a = rand() % 5;
-    if (chance_a == 4) {
-        x.artifact = (rand() % 3) + 1;
-    }
-    else
-    {
-        x.artifact = 0;
-    }
-    x.occupation = 0;
-    return x;
-}
-
 //Function drawing given board with colors
 void draw_board_color(struct tile** board, int* row, int* column) {
     int i, j;
