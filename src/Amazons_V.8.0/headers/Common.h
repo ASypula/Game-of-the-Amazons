@@ -93,17 +93,25 @@ typedef struct game_state {
 */
 
 void blank_table(int table, int size);
-/* fills the table with 0's
-    table - chosen table to work on
-    size - size of the table*/
+/** 
+* fills the table with 0's
+* @param table - chosen table to work on (to be filled with 0's)
+* @param size - size of the table
+*/
 
 int get_next(int* c);
-/* function that gets next char after whitespaces
-    *c - currently stored character (the one previously taken)*/
+/** 
+* function that gets next char after whitespaces
+* @param *c - currently stored character (the one previously taken)
+* @return next character
+*/
 
 int number(int x);
-/* changes a number from ASCII code to the decimal number
-    x - number in ASCII code
-    return value - a corresponding decimal number */
+/** 
+* changes a number from ASCII code to the decimal number
+* @param x - number in ASCII code
+* @return value - a corresponding decimal number
+*/
+
 
 #endif // _Common_H
