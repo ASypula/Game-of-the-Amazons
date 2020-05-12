@@ -23,16 +23,24 @@ void place_amazons(game_state* GS);
 	*GS - game_state */
 
 void get_size(game_state* GS);
-/* gets size of the board
-    *GS - game_state */
+/** 
+* gets size of the board, 
+* saves the number of rows in GS->fixed_inf.height 
+* saves the number of columns in GS->fixed_inf.width 
+* @param *GS - game_state
+*/
 
 tile get_tile(game_state* GS);
-/* saves three pieces of information (digits) about tile
-    *GS - game_state */
+/** 
+* saves three pieces of information (digits) about tile: treasure, artifact and occupation
+* @param *GS - game_state
+*/
 
 void get_board(game_state* GS);
-/* gets information about whole board (all tiles)
-    *GS - game_state */
+/** 
+* gets information about whole board (all tiles)
+* @param *GS - game_state
+*/
 
 void choose_tile(game_state* GS, int* x, int* y);
 /*
