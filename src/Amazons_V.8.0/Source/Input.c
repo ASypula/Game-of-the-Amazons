@@ -62,8 +62,8 @@ void get_size(game_state* GS)
 
     while ((GS->c = getchar()) != '\n')
         col = col * 10 + number(GS->c);
-    GS->fixed.width = row;
-    GS->fixed.height = col;
+    GS->fixed.width = column;
+    GS->fixed.height = row;
 }
 
 tile get_tile(game_state* GS)
