@@ -31,19 +31,19 @@ typedef struct coordinate {
     int y;
 }coordinate;
 
-typedef struct variable{
+typedef struct fixed_inf{
     int width;
     int height;
     int number_of_players;
     int number_of_pawns;
-}variable;
+}fixed_inf;
 
 typedef struct game_state {
     tile** board;
     player_data* player_list;
     coordinate point_1;
     coordinate point_2;
-    variable fixed;
+    fixed_inf fixed;
     int current_player;
     int n_player;
     int p_with_valid_moves;
@@ -70,7 +70,7 @@ typedef struct game_state {
         x - x coordinate of the point
         y - y coordinate of the point
 
-    VARIABLE:   (Structure defining a data fixed by players)
+    FIXED_INF:   (Structure defining a data fixed by players)
 
         int width               - width of the board
         int height              - height of the board
@@ -83,7 +83,7 @@ typedef struct game_state {
         player_data* player_list    - list of players
         coordinate point_1          - coordinates of a point 1
         coordinate point_2          - coordinates of a point 2
-        variable fixed              - variable fixed by player
+        fixed_inf fixed             - information fixed by player
         int current_player          - id of player currently making move
         int n_player                - n-th player
         int p_with_valid_moves      - how many players still can make a move
