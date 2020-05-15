@@ -3,69 +3,114 @@
 
 #include "Common.h"
 
-//Makes the text White
 void White_txt();
+/**
+* Function changes color of displayed symbols to:
+* White
+*/
 
-//Makes the Bold white text
 void White_bold_txt();
+/**
+* Function changes color of displayed symbols to:
+* Bolded white
+*/
 
-//Makes the text intense yellow
 void Yellow_I_txt();
+/**
+* Function changes color of displayed symbols to:
+* Intense yellow
+*/
 
-//Makes the text Green
 void Green_txt();
+/**
+* Function changes color of displayed symbols to:
+* Green
+*/
 
-//Makes the text intense green
 void Green_I_txt();
+/**
+* Function changes color of displayed symbols to:
+* Bolded Green
+*/
 
-//Makes the text Blue
 void Blue_txt();
+/**
+* Function changes color of displayed symbols to:
+* Blue
+*/
 
-//Makes the text intense Blue
 void Blue_I_txt();
+/**
+* Function changes color of displayed symbols to:
+* Bolded Blue
+*/
 
-//Makes the text Magenta
 void Magenta_txt();
+/**
+* Function changes color of displayed symbols to:
+* Magenta
+*/
 
-//Makes the text intense Magenta
 void Magenta_I_txt();
+/**
+* Function changes color of displayed symbols to:
+* Bolded Magenta
+*/
 
-//Makes the text Red
 void Red_txt();
+/**
+* Function changes color of displayed symbols to:
+* Red
+*/
 
-//Makes the text intense Red
 void Red_I_txt();
+/**
+* Function changes color of displayed symbols to:
+* Bolded Red
+*/
 
-//Makes the text intense Cyan
 void Cyan_I_txt();
+/**
+* Function changes color of displayed symbols to:
+* Cyan
+*/
 
-//Makes the tile all white which means it is occupied by arrow/spear
 void Occupied_tile_txt();
+/**
+* Function changes way of displaying symbol so it looks like white rectangles:
+* white background and white letter
+*/
 
-//Function to check color for specific player ID (Sends Error message when ID is not valid (is not in range from 0-9))
 void Players_color(struct game_state* GS, int i, int j);
-/*
-*GS - game_state
-i - x coordinate
-j - y coordinate
+/**
+* A function that changes color of displayed text for each player
+* @param *GS - game_state
+* @param i - x coordinate of a tile
+* @param j - y coordinate of a tile
 */
 
-
-//Filling a board with content
 void generate_board(struct game_state* GS);
-/*
-    *GS - game_state
+/**
+* A function fills each tile of the board with random treasure and artifact
+* @param *GS - game_state
 */
+
 
 //Function drawing given board with colors
 void draw_board_color(struct game_state* GS);
-/*
-    *GS - game_state
+/**
+* A function draws a board using colors
+* @param *GS - game_state
 */
 
 void order_scores(int number_of_players, player_data player[], player_data ranking[] )
-/* creates a new structure by copying the player structure
-sorts a new structure by the number of points*/
+/* 
+* Creates a new structure by copying the player structure
+* sorts a new structure by the number of points
+* @param number_of_players - number of players in the game
+* @param player[] - old structure
+* @param ranking - new strucutre
+*/
 
 
 #endif // _Output_H
