@@ -138,38 +138,31 @@ void draw_board(struct game_state* GS) {
     }
 }
 
-void order_scores(int number_of_players, player_data player[], player_data ranking[]) {
+void order_scores( game_state *GS ){
 
-    /*copies the structure*/
+  /*copies the structure*/
+    state.ranking = (int *) malloc(sizeof(int) * state.fixed.number_of_players));
+
     int i;
-    for (i = 0; i < number_of_players; i++) {
-        ranking[i].points = player[i].points;
+    for (i = 0; i < GS->fixed.number_of_players; i++) {
+        ranking[i] = player_list[i];
     }
 
-    /*bubble sort*/
-    i = 0; int j = 0;
-    for (int j = 0; j < number_of_players - 1; j++) {
-        for (int i = 0; i + 1 < number_of_players - j; i++) {
+  /*bubble sort*/
+    i = 0;
+    int j = 0;
+    for (int j = 0; j < GS->fixed.number_of_players - 1; j++) {
+        for (int i = 0; i + 1 < GS->fixed.number_of_players- j; i++) {
 
             if (ranking[i].points < ranking[i + 1].points) {
-                int temp = ranking[i].points;
-                ranking[i].points = ranking[i + 1].points;
-                ranking[i + 1].points = temp;
+                player_data temp[8];
+                temp[0] = ranking[i];
+                ranking[i] = ranking[i + 1];
+                ranking[i + 1] = temp[0];
             }
         }
     }
 
-    /* acscribes names to the new sorted ranking structure*/
-    int previous;
-    for (int j = 0; j < number_of_players; j++) {
-        for (int i = 0; i < number_of_players; i++) {
-            if (ranking[j].points == player[i].points && i != previous) {
-                previous = i;
-                ranking[j] = player[i];
-                break;
-            }
-        }
-    }
 }
 
 void add_player_data_file(FILE* fp, struct game_state* GS) {
