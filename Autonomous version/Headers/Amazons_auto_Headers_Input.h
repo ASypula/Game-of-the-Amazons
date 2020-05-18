@@ -102,7 +102,7 @@ void get_player_data_file(FILE* fp, struct game_state* GS);
 * @param *GS - game_state
 */
 
-void read_file(char* file_name, struct game_state* GS)''
+void read_file(char* file_name, struct game_state* GS);
 /**
 * Function reads specific data from file and saves it in the data base
 * (allocates memory needed for data)
