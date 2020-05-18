@@ -1,50 +1,23 @@
 ﻿#include "Input.h"
 
-void get_number_of_players(game_state* GS) {
 
-    printf("Enter the number of players: \n");
-    scanf("%d", &GS->fixed.number_of_players);
-    while (GS->fixed.number_of_players > MAX_NUMBER_OF_PLAYERS) {
-        printf("The number of players should be less than 8\n");
-        printf("Enter the number of players: \n");
-        scanf("%d", &GS->fixed.number_of_players);
+
+int place_amazons(game_state *GS){
+    
+    if(GS->alredy_placed_amazons < GS->fixed.number_of_pawns){
+
+        do {
+            int chosen_row= rand()%GS->fixed.height;
+            int chosen_column= rand()%GS->fixed.width;
+        } while (GS->board[chosen_row][chosen_column].occupation != FREE || chosen_row > GS->fixed.height || chosen_column > GS->fixed.width);
+
+        GS->board[chosen_row][chosen_column].treasure = FREE;
+        GS->board[chosen_row][chosen_column].artifact = FREE;
+        GS->board[chosen_row][chosen_column].occupation = GS->player_list[i].ID;
+        GS->already_placed_amazons++;
+        return 0;
     }
-}
-
-void get_players_names(game_state* GS) {
-    int i;
-    for (i = 0; i < GS->fixed.number_of_players; i++) {
-        printf("player %d. Enter your name: \n", i + 1);
-        scanf("%s", GS->player_list[i].name);
-        GS->player_list[i].ID = i + 1;
-        GS->player_list[i].points = EMPTY;
-    }
-}
-
-
-void place_amazons(game_state* GS) // uwaga: uzytkownik moze podac nieistniejacy kafelek
-{
-    int chosen_row = 0, chosen_column = 0, i, current_player;
-    for (i = 0; i < GS->fixed.number_of_pawns; i++) {
-        for (current_player = 0; current_player < GS->fixed.number_of_players; current_player++) {
-
-            draw_board_color(GS);
-
-            do {
-                printf("%s please, place your amazon on the board\n", GS->player_list[current_player].name);
-
-                get_move_with_arrowkey(GS, &chosen_row, &chosen_column);
-
-            } while (GS->board[chosen_row][chosen_column].occupation != FREE);
-
-
-            GS->board[chosen_row][chosen_column].treasure = FREE;
-            GS->board[chosen_row][chosen_column].artifact = FREE;
-            GS->board[chosen_row][chosen_column].occupation = current_player + 1;
-
-            system("cls");
-        }
-    }
+    return 1;
 }
 
 void get_size(game_state* GS)
