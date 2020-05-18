@@ -82,9 +82,18 @@ tile get_tile_file(FILE* fp, struct game_state* GS) {
 void get_board_file(FILE* fp, struct game_state* GS) {
 
 	int i, j;
+	int placed_pawns = 0;
+	GS->positions = (int*)malloc(sizeof(positions));
 	for (i = 0; i < GS->fixed.height; i++) {
 		for (j = 0; j < GS->fixed.width; j++) {
 			GS->board[i][j] = get_tile_file(fp, GS);
+			if (GS->board[i][j].occupation == GS->player_list.ID)
+            {
+                GS->positions = (int*) realloc (GS->positions, (placed_pawns+1) * sizeof(positions));
+                GS->positions[placed_pawns].x = j;
+                GS->positions[placed_pawns].y = i;
+                placed_pawns++;
+            }
 		}
 	}
 }
