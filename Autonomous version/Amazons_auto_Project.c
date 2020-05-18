@@ -82,12 +82,7 @@ int main(int argc, char *argv[]) {
     printf(" .8'     `888.   888   888   888  d8(  888   .d8P'  .P 888   888  888   888  o.  )88b\n");
     printf("o88o     o8888o o888o o888o o888o `Y888''8o d8888888P  `Y8bod8P' o888o o888o 8''888P'\n\n");
     White_txt();
-    printf("Please, give the size of the board you want to play on.\n");
-    printf("Height: ");
-    scanf("%d", &state.fixed.height);
-    printf("Width: ");
-    scanf("%d", &state.fixed.width);
-    system("cls");
+
 
     //Freeing the memory
     while (p < state.fixed.height) {
