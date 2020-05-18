@@ -72,6 +72,7 @@ typedef struct game_state {
     int current_player;         /**< id of player currently making move         */
     int n_player;               /**< n-th player                                */
     int c;                      /**< currently stored character                 */
+    int already_placed_amazons; /**< number of already placed amazons           */
     /*@}*/
 }game_state;
 
