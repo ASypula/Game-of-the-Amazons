@@ -28,36 +28,16 @@ int main(int argc, char *argv[]) {
 
     if (argc == 5 && !strcmp(argv[1], "phase=placement")) // four parameters, placement phase
     {
-        //Getting player info
-
-        //get_number_of_players(GS);
-
-        //Allocating memory for a player list
-
-        //state.player_list = (int*)malloc(sizeof(int) * state.fixed.number_of_players);
-
-        //get_players_names(GS);
-
-        //Getting the number of amazons
+        
         int i = 8;
         while (argv[2][i++] != "\0")
         {
             state.fixed.number_of_pawns = state.fixed.number_of_pawns * 10 + atoi(argv[2][i]);
         }
-
-        //inputfile_name = argv[3];
-        //outputfile_name = argv[4];
         
         read_file(argv[3], GS);
 
-        get_size (GS);
-
-
-        //When all amazons are placed on the board, return 1
-        if (get_board (GS))
-            return 1;
-
-        //Placing amazons of each player
+        //Placing amazons
 
         place_amazons(GS);
 
@@ -91,7 +71,7 @@ int main(int argc, char *argv[]) {
         printf ("Name of the player: %s", GS->player_list.name); //needs some changes
     }
 
-    //Begining of the Game
+    //Beginning of the Game
 
     Green_I_txt();
     printf("      .o.                                                                            \n");
