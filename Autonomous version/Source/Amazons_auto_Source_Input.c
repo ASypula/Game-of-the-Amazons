@@ -4,7 +4,7 @@
 
 int place_amazons(game_state *GS){
     
-    if(GS->alredy_placed_amazons < GS->fixed.number_of_pawns){
+    if(GS->already_placed_amazons < GS->fixed.number_of_pawns){
 
         do {
             int chosen_row= rand()%GS->fixed.height;
@@ -18,37 +18,6 @@ int place_amazons(game_state *GS){
         return 0;
     }
     return 1;
-}
-
-
-//changes, returns 1 if all the pawns are placed on the board, saves the positions of ones amazon
-int get_board(game_state* GS)
-{
-    int i = 0, j;
-    int placed_pawns = 0;
-    int m = GS->fixed.height;
-    int n = GS->fixed.width;
-    while (i < m)
-    {
-        j = 0;
-        while (j < n)
-        {
-            //if ((*c = getchar()) == '\n')
-            GS->board[i][j] = get_tile(GS);
-            if (GS->board[i][j].occupation == GS->player_list.ID)
-            {
-                GS->positions[placed_pawns].x = j;
-                GS->positions[placed_pawns].y = i;
-                placed_pawns++;
-            }
-            j++;
-        }
-        i++;
-    }
-    if (placed_pawns == GS->fixed.number_of_pawns)
-        return 1;
-    else
-        return 0;
 }
 
 void choose_tile(game_state* GS, int* x, int* y) {
@@ -66,7 +35,7 @@ void choose_tile(game_state* GS, int* x, int* y) {
     case 75:
         if (*y == 0) {
             Red_I_txt();
-            printf("You can't move on negitve tile!\n");
+            printf("You can't move on negative tile!\n");
             White_txt();
         }
         else {
