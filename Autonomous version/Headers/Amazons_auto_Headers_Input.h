@@ -36,6 +36,7 @@ tile get_tile(game_state* GS);
 /**
 * saves three pieces of information (digits) about tile: treasure, artifact and occupation
 * @param *GS - game_state
+* @return tile
 */
 
 void get_board(game_state* GS);
@@ -64,10 +65,49 @@ void choose_tile(game_state* GS, int* x, int* y);
 
 void get_move_with_arrowkey(game_state* GS, int* x, int* y);
 /**
-* Function creates menu with instractions for the user how to choose a tile by using arrowkeys
+* Function creates menu with instrunctions for the user how to choose a tile by using arrowkeys
 * and ends with press of enter
 * @param *x - x coordinate
 * @param*y - y coordinate
+*/
+
+int get_multi_digit_file(FILE* fp);
+/**
+* Function reads the next sequence of digits from a file
+* and combines them into one big number
+* @param *fp - file pointer
+* @return int - number 
+*/
+
+tile get_tile_file(FILE* fp, struct game_state* GS);
+/**
+* Function reads next 3 digits from the file (tile) and returns them as
+* a tile structure
+* @param *fp - file pointer
+* @param *GS - game_state
+* @return tile - data of a tile
+*/
+
+void get_board_file(FILE* fp, struct game_state* GS);
+/**
+* Function reads every tile from a file and saves it in the data base
+* @param *fp - file pointer
+* @param *GS - game_state
+*/
+
+void get_player_data_file(FILE* fp, struct game_state* GS);
+/**
+* Function reads player_data from a file and saves it in the data base
+* @param *fp - file pointer
+* @param *GS - game_state
+*/
+
+void read_file(char* file_name, struct game_state* GS)''
+/**
+* Function reads specific data from file and saves it in the data base
+* (allocates memory needed for data)
+* @param *file_name - name of a file
+* @param *GS - game_state
 */
 
 #endif // _Input_H
