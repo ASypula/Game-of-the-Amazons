@@ -47,6 +47,8 @@ int main(int argc, char *argv[]) {
 
         inputfile_name = argv[3];
         outputfile_name = argv[4];
+        
+        read_file(inputfile_name, GS);
 
         get_size (GS);
 
@@ -67,17 +69,27 @@ int main(int argc, char *argv[]) {
         place_amazons(GS);
 
         system("cls");
+        
+        save_data_file(outputfile_name, GS);
     }
 
     // three parameters, movement phase
     else if (argc == 4 && !strcmp(argv[1], "phase=movement"))
     {
+        inputfile_name = argv[2];
+        outputfile_name = argv[3];
+        
+        read_file(inputfile_name, GS);
+        
         if (!(get_board (GS)))
             printf ("Not appropriate number of amazons.");
         else
         {
             move_amazon(GS);
         }
+        
+        save_data_file(outputfile_name, GS);
+        
     }
 
     // one parameter, displaying the name
