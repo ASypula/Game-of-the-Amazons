@@ -12,52 +12,6 @@ void place_amazons(game_state* GS);
 * @param *GS - game_state
 */
 
-void get_size(game_state* GS);
-/**
-* gets size of the board,
-* saves the number of rows in GS->fixed_inf.height
-* saves the number of columns in GS->fixed_inf.width
-* @param *GS - game_state
-*/
-
-tile get_tile(game_state* GS);
-/**
-* saves three pieces of information (digits) about tile: treasure, artifact and occupation
-* @param *GS - game_state
-* @return tile
-*/
-
-void get_board(game_state* GS);
-/**
-* gets information about whole board (all tiles)
-* saves the positions of ones amazon
-* @param *GS - game_state
-* @return 1 if all the pawns are placed on the board, 0 otherwise
-*/
-
-void choose_tile(game_state* GS, int* x, int* y);
-/**
-* Function reads the hitten key (Or combination) and changes the coordiantes form the definition:
-* Up - moves 1 tile up (y-1)
-* Ctrl + UP - moves 5 tiles up (y-5)
-* Down - moves 1 tile down (y+1)
-* Ctrl + Down - moves 5 tiles down (y+5)
-* Left - moves 1 tile left (x-1)
-* Ctrl + Left - moves 5 tiles left (x-5)
-* Right - moves 1 tile rigt (x+1)
-* Ctrl + Right - moves 5 tiles right (x+5)
-* @param *GS - game_state
-* @param *x - x coordinate
-* @param *y - y coordinate
-*/
-
-void get_move_with_arrowkey(game_state* GS, int* x, int* y);
-/**
-* Function creates menu with instrunctions for the user how to choose a tile by using arrowkeys
-* and ends with press of enter
-* @param *x - x coordinate
-* @param*y - y coordinate
-*/
 
 int get_multi_digit_file(FILE* fp);
 /**
