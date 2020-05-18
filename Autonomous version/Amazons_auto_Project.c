@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
         
         read_file(argv[2], GS);
         
-        if (!(get_board (GS)))
+        if (GS->already_placed_amazons < GS->fixed.number_of_pawns)
             printf ("Not appropriate number of amazons.");
         else
         {
