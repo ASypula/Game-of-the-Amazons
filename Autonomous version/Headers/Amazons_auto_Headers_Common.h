@@ -91,7 +91,7 @@ int number(int x);
 * @return value - a corresponding decimal number
 */
 
-int fmax (int x, int y)
+int fmax(int x, int y)
 /**
 * function returning the maximum of two values
 * @param x - first value to be compared
@@ -99,7 +99,7 @@ int fmax (int x, int y)
 * @return maximum of (x, y) or if they're equal then any of them
 */
 
-int fmax_of8 (int x1, int x2, int x3, int x4, int x5, int x6, int x7, int x8)
+int fmax_of8(int x1, int x2, int x3, int x4, int x5, int x6, int x7, int x8)
 /**
 * function returning the maximum of two values
 * @param x1 - first value to be compared
