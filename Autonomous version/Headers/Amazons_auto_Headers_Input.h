@@ -3,18 +3,6 @@
 
 #include "Common.h"
 
-int get_number_of_players(game_state* GS);
-/**
-* gets the number of players and checks if it is less than 9
-* @param *GS - game_state
-*/
-
-void get_players_names(game_state* GS);
-/**
-* gets players names
-* ascribes ID and initial number of points=0 to each player in structure player_data player
-* @param *GS - game_state
-*/
 
 void place_amazons(game_state* GS);
 /**
