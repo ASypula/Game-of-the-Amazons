@@ -17,13 +17,11 @@ void draw_board_color(struct game_state* GS);
 * @param *GS - game_state
 */
 
-void order_scores(int number_of_players, player_data player[], player_data ranking[]);
+void order_scores(struct game_state* GS);
 /*
 * Creates a new structure by copying the player structure
 * sorts a new structure by the number of points
-* @param number_of_players - number of players in the game
-* @param player[] - old structure
-* @param ranking - new strucutre
+* @param *GS - game state
 */
 
 void add_player_data_file(FILE* fp, struct game_state* GS);
