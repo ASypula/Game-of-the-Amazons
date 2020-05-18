@@ -45,10 +45,10 @@ int main(int argc, char *argv[]) {
             state.fixed.number_of_pawns = state.fixed.number_of_pawns * 10 + atoi(argv[2][i]);
         }
 
-        inputfile_name = argv[3];
-        outputfile_name = argv[4];
+        //inputfile_name = argv[3];
+        //outputfile_name = argv[4];
         
-        read_file(inputfile_name, GS);
+        read_file(argv[3], GS);
 
         get_size (GS);
 
@@ -70,16 +70,16 @@ int main(int argc, char *argv[]) {
 
         system("cls");
         
-        save_data_file(outputfile_name, GS);
+        save_data_file(argv[4], GS);
     }
 
     // three parameters, movement phase
     else if (argc == 4 && !strcmp(argv[1], "phase=movement"))
     {
-        inputfile_name = argv[2];
-        outputfile_name = argv[3];
+        //inputfile_name = argv[2];
+        //outputfile_name = argv[3];
         
-        read_file(inputfile_name, GS);
+        read_file(argv[2], GS);
         
         if (!(get_board (GS)))
             printf ("Not appropriate number of amazons.");
@@ -88,7 +88,7 @@ int main(int argc, char *argv[]) {
             move_amazon(GS);
         }
         
-        save_data_file(outputfile_name, GS);
+        save_data_file(argv[3], GS);
         
     }
 
