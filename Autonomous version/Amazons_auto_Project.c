@@ -52,13 +52,6 @@ int main(int argc, char *argv[]) {
 
         get_size (GS);
 
-        //Allocating memory for the board
-        state.board = malloc(state.fixed.height * sizeof(**(state.board)));
-        int p = 0;
-        while (p < m) {
-            *(state.board + p) = malloc(state.fixed.width * sizeof(**state.board));
-            p++;
-        }
 
         //When all amazons are placed on the board, return 1
         if (get_board (GS))
