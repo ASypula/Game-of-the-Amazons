@@ -24,7 +24,7 @@ void generate_board(struct game_state* GS) {
     }
 }
 
-void draw_board_color(struct game_state* GS) {
+void draw_board(struct game_state* GS) {
     int i, j;
     for (i = 0; i <= GS->fixed.height; i++) {
         //Drawing a first row which describes columns
