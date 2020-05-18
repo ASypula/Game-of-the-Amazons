@@ -20,27 +20,6 @@ int place_amazons(game_state *GS){
     return 1;
 }
 
-void get_size(game_state* GS)
-{
-    int row = 0;
-    int col = 0;
-    while ((GS->c = getchar()) != ' ')
-        row = row * 10 + number(GS->c);
-
-    while ((GS->c = getchar()) != '\n')
-        col = col * 10 + number(GS->c);
-    GS->fixed.width = column;
-    GS->fixed.height = row;
-}
-
-tile get_tile(game_state* GS)
-{
-    tile x;
-    x.treasure = number(get_next(GS));
-    x.artifact = number(get_next(GS));
-    x.occupation = number(get_next(GS));
-    return x;
-}
 
 //changes, returns 1 if all the pawns are placed on the board, saves the positions of ones amazon
 int get_board(game_state* GS)
