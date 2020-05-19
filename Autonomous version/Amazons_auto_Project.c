@@ -90,6 +90,9 @@ int main(int argc, char *argv[]) {
         p++;
     }
     free(state.board);
+    free(GS->player_list);
+    free(GS->positions);
+    free(GS);
 
     return 0;
 }
