@@ -5,13 +5,12 @@
 #define OCCUPIED 1
 #define MISSILE 9
 #define MAX_NUMBER_OF_PLAYERS 8
-#define NAME_LENGTH 15
+#define NAME_LENGTH 16
 #define EMPTY 0
 #define HORSE 1
 #define BROKEN_ARROW 2
 #define SPEAR 3
 #define NORMAL_MOVE 1
-#define CTRL_MOVE 5
 #define Starting_position 0
 
 /**
@@ -63,7 +62,7 @@ typedef struct fixed_inf{
 */
 typedef struct game_state {
     /*@{*/
-    char name[16];
+    char name[NAME_LENGTH];     /**< name of our programme                      */
     tile** board;               /**< array of tiles (board)                     */
     player_data* player_list;   /**< list of players                            */
     coordinate point_1;         /**< coordinates of a point 1                   */
