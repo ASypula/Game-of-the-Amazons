@@ -1,5 +1,30 @@
 ﻿#include "Movement.h"
 
+int find_ID (game_state* GS)
+{
+    int i = 0;
+    while (strcmp(GS->player_list[i].name, GS->name))
+    {
+        i++;
+    }
+    return GS->player_list[i].ID;
+}
+
+void find_amazons (game_state* GS)
+{
+    int id = find_ID(GS);
+	GS->positions = (int*)malloc(sizeof(positions));
+	for (i = 0; i < GS->fixed.height; i++) {
+		for (j = 0; j < GS->fixed.width; j++) {
+			if (GS->board[i][j].occupation == id) {
+                GS->positions = (int*) realloc (GS->positions, (placed_pawns+1) * sizeof(positions));
+                GS->positions[placed_pawns].x = j;
+                GS->positions[placed_pawns].y = i; 
+            }
+		}
+	}
+}
+
 void choose_amazon(game_state* GS, int *x, int *y, int *n_amazon)
 {
     int left_amazons = GS->fixed.number_of_pawns - 1; //number of amazons that are left to be checked - 1
