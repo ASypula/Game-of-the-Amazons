@@ -63,6 +63,7 @@ typedef struct fixed_inf{
 */
 typedef struct game_state {
     /*@{*/
+    char name[16];
     tile** board;               /**< array of tiles (board)                     */
     player_data* player_list;   /**< list of players                            */
     coordinate point_1;         /**< coordinates of a point 1                   */
