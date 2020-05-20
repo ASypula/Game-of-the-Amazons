@@ -103,7 +103,7 @@ void move_amazon(game_state* GS)
     GS->board[GS->point_1.x][GS->point_1.y].occupation = FREE;
     GS->point_1.x = *x;;
     GS->point_1.y = *y;
-    GS->board[GS->point_1.x][GS->point_1.y].occupation = GS->player_list[GS->current_player].ID; //??coś do zmiany
+    GS->board[GS->point_1.x][GS->point_1.y].occupation = find_ID(GS);
     GS->positions[n_amazon].x = GS->point_1.x;
     GS->positions[n_amazon].y = GS->point_1.y;
     get_treasure(GS);
@@ -152,7 +152,8 @@ int point_in_board (game_state* GS, int x, int y)
 
 int tile_with_enemy (game_state* GS, int x, int y)
 {
-    if (GS->board[x][y].occupation == GS->) //ID's of other players
+    int id = find_ID(GS);
+    if (GS->board[x][y].occupation != id || GS->board[x][y].occupation != FREE || GS->board[x][y].occupation != MISSILE) // ID's of other players
         return 1;
     else
         return 0;
