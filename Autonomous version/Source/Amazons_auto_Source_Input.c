@@ -4,6 +4,8 @@
 
 int place_amazons(game_state *GS){
     
+    int id = find_ID(GS);
+    
     if(GS->already_placed_amazons < GS->fixed.number_of_pawns){
 
         do {
@@ -13,7 +15,7 @@ int place_amazons(game_state *GS){
 
         GS->board[chosen_row][chosen_column].treasure = FREE;
         GS->board[chosen_row][chosen_column].artifact = FREE;
-        GS->board[chosen_row][chosen_column].occupation = GS->player_list[i].ID;
+        GS->board[chosen_row][chosen_column].occupation = id;
         GS->already_placed_amazons++;
         return 0;
     }
