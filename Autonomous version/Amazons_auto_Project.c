@@ -22,6 +22,7 @@ int main(int argc, char *argv[]) {
 
     game_state state;
     game_state* GS = &state;
+    GS->name = "TripleA";
 
     state.current_player = 0;
     state.n_player = 0;
