@@ -13,6 +13,7 @@ int find_ID (game_state* GS)
 void find_amazons (game_state* GS)
 {
     int id = find_ID(GS);
+    int placed_pawns = 0;
 	GS->positions = (int*)malloc(sizeof(positions));
 	for (i = 0; i < GS->fixed.height; i++) {
 		for (j = 0; j < GS->fixed.width; j++) {
@@ -20,6 +21,7 @@ void find_amazons (game_state* GS)
                 GS->positions = (int*) realloc (GS->positions, (placed_pawns+1) * sizeof(positions));
                 GS->positions[placed_pawns].x = j;
                 GS->positions[placed_pawns].y = i; 
+                placed_pawns++;
             }
 		}
 	}
