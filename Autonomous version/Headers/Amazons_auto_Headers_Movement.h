@@ -3,9 +3,22 @@
 
 #include "Common.h"
 
+int find_ID (game_state* GS);
+/**
+* finding ID of our programme
+* @param *GS - game_state
+* @return our ID
+*/
+
+void find_amazons (game_state* GS);
+/**
+* finding its own amazons on the board and saving their positions
+* @param *GS - game_state
+*/
+
 void choose_amazon(game_state* GS, int* x, int* y, int *n_amazon);
 /**
-* player chooses an amazon to move (gives a number of row and column)
+* programme chooses an amazon to move
 * function also checks if the chosen amazon belongs to current player and whether it has valid moves
 * @param *GS - game_state
 * @param *x  - x coordinate
