@@ -1,6 +1,8 @@
 #ifndef _Common_H
 
 #define _Common_H
+#define MIN_ASCII_DIGIT 48
+#define MAX_ASCII_DIGIT 57
 #define FREE 0
 #define OCCUPIED 1
 #define MISSILE 9
@@ -76,6 +78,12 @@ typedef struct game_state {
     /*@}*/
 }game_state;
 
+int is_digit (char c);
+/**
+* checks if a given character is a digit from 0 to 9 
+* @param c - character being checked
+* @return 1 if c is a digit, 0 otherwise
+*/
 
 int get_next(int* c);
 /**
