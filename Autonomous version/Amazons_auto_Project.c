@@ -29,11 +29,20 @@ int main(int argc, char *argv[]) {
 
     if (argc == 5 && !strcmp(argv[1], "phase=placement")) // four parameters, placement phase
     {
-        
-        int i = 8;
-        while (argv[2][i++] != "\0")
+        int i = 0;
+        char c;
+        if (argv[2][i++] == 'a' && argv[2][i++] == 'm' && argv[2][i++] == 'a' && argv[2][i++] == 'z' && argv[2][i++] == 'o' && argv[2][i++] == 'n' && argv[2][i++] == 's' && argv[2][i++] == '=')
         {
-            state.fixed.number_of_pawns = state.fixed.number_of_pawns * 10 + atoi(argv[2][i]);
+            while ((c = argv[2][i++]) != '\0')
+            {
+                if (!is_digit(c))
+                {
+                    printf ("Number of amazons is supposed to be a number\n");
+                    break;
+                }
+                else
+                    state.fixed.number_of_pawns = state.fixed.number_of_pawns * 10 + atoi(c); //atoi czy inna funkcja
+            }
         }
         
         read_file(argv[3], GS);
@@ -55,12 +64,8 @@ int main(int argc, char *argv[]) {
         
         read_file(argv[2], GS);
         
-        if (GS->already_placed_amazons < GS->fixed.number_of_pawns)
-            printf ("Not appropriate number of amazons.");
-        else
-        {
-            move_amazon(GS);
-        }
+        
+        move_amazon(GS);
         
         save_data_file(argv[3], GS);
         
@@ -70,6 +75,11 @@ int main(int argc, char *argv[]) {
     else if (argc == 2 && !=strcmp(argv[1], "name"))
     {
         printf ("Name of the player: %s", GS->name);
+    }
+    
+    else
+    {
+        printf ("Not defined common line parameters\n");
     }
 
     //Beginning of the Game
