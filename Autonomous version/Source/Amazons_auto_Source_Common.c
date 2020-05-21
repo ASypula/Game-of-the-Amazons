@@ -1,5 +1,12 @@
 #include "Common.h"
 
+int is_digit (char c)
+{
+    if (c >= MIN_ASCII_DIGIT && c <= MAX_ASCII_DIGIT)
+        return 1;
+    else
+        return 0;
+}
 
 int get_next(game_state* GS)
 {
