@@ -24,6 +24,7 @@ int main(int argc, char *argv[]) {
     game_state* GS = &state;
     GS->name = "TripleA";
 
+    state.error = 0;
     state.current_player = 0;
     state.n_player = 0;
 
@@ -46,14 +47,15 @@ int main(int argc, char *argv[]) {
         }
         
         read_file(argv[3], GS);
+        if(state.error == 0){
+            //Placing amazons
 
-        //Placing amazons
+            place_amazons(GS);
 
-        place_amazons(GS);
-
-        system("cls");
+            system("cls");
         
-        save_data_file(argv[4], GS);
+            save_data_file(argv[4], GS);
+        }
     }
 
     // three parameters, movement phase
@@ -64,11 +66,12 @@ int main(int argc, char *argv[]) {
         
         read_file(argv[2], GS);
         
+        if(state.error == 0){
         
-        move_amazon(GS);
+            move_amazon(GS);
         
-        save_data_file(argv[3], GS);
-        
+            save_data_file(argv[3], GS);
+        }
     }
 
     // one parameter, displaying the name
