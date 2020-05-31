@@ -64,7 +64,7 @@ int found_horse(game_state* GS, int *dx, int *dy, int x, int y);
 * @return 0 - if there is no horse on the board, 1 - if there is a horse
 */
 
-void max_point (game_state* GS, int *dx, int*dy, int x, int y);
+int max_point (game_state* GS, int *dx, int*dy, int x, int y);
 /**
 * Function finds a tile with maximum number of points (treasure)
 * @param *GS - game_state
@@ -74,6 +74,15 @@ void max_point (game_state* GS, int *dx, int*dy, int x, int y);
 * @param y - y coordinate from which function is supposed to start checking
 * (x, y) - starting position
 * @return maximum number of found treasure
+*/
+
+int tile_available (game_state* GS, int x, int y);
+/**
+* Function checks if a tile is available for an amazon positioned next to it
+* @param *GS - game_state
+* @param x - x coordinate of the tile being checked
+* @param y - y coordinate of the tile being checked
+* @return 0 - if the tile is not available, 1 - if the tile is available
 */
 
 #endif // _Input_H
