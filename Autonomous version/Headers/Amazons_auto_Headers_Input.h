@@ -13,11 +13,12 @@ void place_amazons(game_state* GS);
 */
 
 
-int get_multi_digit_file(FILE* fp);
+int get_multi_digit_file(FILE* fp, struct game_state* GS);
 /**
 * Function reads the next sequence of digits from a file
 * and combines them into one big number
 * @param *fp - file pointer
+* @param *GS - game_state
 * @return int - number 
 */
 
