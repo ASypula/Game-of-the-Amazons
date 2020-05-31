@@ -17,10 +17,16 @@ int place_amazons(game_state *GS){
             return 1;
         }
         else
+        {
+            printf ("There is no valid tile to place an amazon.\n");
             return 0;
+        }
     }
     else
+    {
+        printf ("All amazons are already placed on the board.\n");
         return 0;
+    }
 }
 
 
