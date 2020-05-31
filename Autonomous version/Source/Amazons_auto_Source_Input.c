@@ -5,21 +5,22 @@
 int place_amazons(game_state *GS){
     
     int id = find_ID(GS);
+    int *x, *y;
     
     if(GS->already_placed_amazons < GS->fixed.number_of_pawns){
-
-        do {
-            int chosen_row= rand()%GS->fixed.height;
-            int chosen_column= rand()%GS->fixed.width;
-        } while (GS->board[chosen_row][chosen_column].occupation != FREE || chosen_row > GS->fixed.height || chosen_column > GS->fixed.width);
-
-        GS->board[chosen_row][chosen_column].treasure = FREE;
-        GS->board[chosen_row][chosen_column].artifact = FREE;
-        GS->board[chosen_row][chosen_column].occupation = id;
-        GS->already_placed_amazons++;
-        return 0;
+        if (best_place (GS, x, y))
+        {
+            GS->board[*x][*y].treasure = FREE;
+            GS->board[*x][*y].artifact = FREE;
+            GS->board[*x][*y].occupation = id;
+            GS->already_placed_amazons++;
+            return 1;
+        }
+        else
+            return 0;
     }
-    return 1;
+    else
+        return 0;
 }
 
 
@@ -239,43 +240,105 @@ int found_horse (game_state* GS, int *dx, int*dy, int x, int y) {
     return found;
 }
 
-int max_point (game_state* GS, int *dx, int*dy, int x, int y)
+int max_point (game_state* GS, int *dx, int*dy, int x, int y, int search_max)
 {
     int i, j;
     int max_found = 0;
-    for (i = x; (i < GS->fixed.width) && (max_found != 5); i++)
+    for (i = x; (i < GS->fixed.width) && (!max_found); i++)
     {
-        for (j = y; (j < GS->fixed.height) && (max_found != 5); j++)
+        for (j = y; (j < GS->fixed.height) && (!max_found); j++)
         {
-            if (GS->board[i][j].treasure > max_found)
+            if (GS->board[i][j].treasure == search_max)
             {
                 *dx = i;
                 *dy = j;
-                max_found = GS->board[i][j].treasure;
+                max_found = 1;
             }
         }
     }
     return max_found;
 }
 
-int tile_available (game_state* GS, int x, int y)
+int tile_available (game_state* GS, int x, int y, int *found_x, int *found_y)
 {
     if (point_in_board(GS, x-1, y) && GS->board[x-1][y].occupation == FREE)
+    {
+        *found_x = x-1;
+        *found_y = y;
         return 1;
+    }
     else if (point_in_board(GS, x-1, y-1) && GS->board[x-1][y-1].occupation == FREE)
+    {
+        *found_x = x-1;
+        *found_y = y-1;
         return 1;
+    }
     else if (point_in_board(GS, x, y-1) && GS->board[x][y-1].occupation == FREE)
+    {
+        *found_x = x;
+        *found_y = y-1;
         return 1;
+    }
     else if (point_in_board(GS, x+1, y-1) && GS->board[x+1][y-1].occupation == FREE)
+    {
+        *found_x = x+1;
+        *found_y = y-1;
         return 1;
+    }
     else if (point_in_board(GS, x+1, y) && GS->board[x+1][y].occupation == FREE)
+    {
+        *found_x = x+1;
+        *found_y = y;
         return 1;
+    }
     else if (point_in_board(GS, x+1, y+1) && GS->board[x+1][y+1].occupation == FREE)
+    {
+        *found_x = x+1;
+        *found_y = y+1;
         return 1;
+    }
     else if (point_in_board(GS, x, y+1) && GS->board[x][y+1].occupation == FREE)
+    {
+        *found_x = x;
+        *found_y = y+1;
         return 1;
+    }
     else if (point_in_board(GS, x-1, y+1) && GS->board[x-1][y-1].occupation == FREE)
+    {
+        *found_x = x-1;
+        *found_y = y+1;
         return 1;
+    }
     else
         return 0;
+}
+
+int best_place (game_state* GS, int *found_x, int *found_y)
+{
+    int x = 0;
+    int y = 0;
+    int *dx;
+    int *dy;
+    int max_search = 5;  //maximum value of treasure
+    int good_place = 0;
+    while (found_horse(GS, dx, dy, x, y) && !(good_place = tile_available(GS, *dx, *dy, found_x, found_y)))
+    {
+        x = *dx + 1;
+        y = *dy;
+    }
+    if (!good_place)
+    {
+        while (max_point(GS, dx, dy, x, y, max_search) && !(good_place = tile_available(GS, *dx, *dy, found_x, found_y) && max_search >= 0)
+        {
+            x = *dx + 1;
+            y = *dy;
+            if ((x == GS->fixed.width) && (y == GS->fixed.height))
+            {
+                x = *dx = 0;
+                y = *dy = 0;
+                max_search--;
+            }
+        }
+    }
+    return good_place;
 }
