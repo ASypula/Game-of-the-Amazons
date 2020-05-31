@@ -205,7 +205,7 @@ int found_horse (game_state* GS, int *dx, int*dy, int x, int y) {
     }
 }
 
-void max_point (game_state* GS, int *dx, int*dy, int x, int y)
+int max_point (game_state* GS, int *dx, int*dy, int x, int y)
 {
     int i, j;
     int max_found = 0;
@@ -221,4 +221,27 @@ void max_point (game_state* GS, int *dx, int*dy, int x, int y)
             }
         }
     }
+    return max_found;
+}
+
+int tile_available (game_state* GS, int x, int y)
+{
+    if (point_in_board(GS, x-1, y) && GS->board[x-1][y].occupation == FREE)
+        return 1;
+    else if (point_in_board(GS, x-1, y-1) && GS->board[x-1][y-1].occupation == FREE)
+        return 1;
+    else if (point_in_board(GS, x, y-1) && GS->board[x][y-1].occupation == FREE)
+        return 1;
+    else if (point_in_board(GS, x+1, y-1) && GS->board[x+1][y-1].occupation == FREE)
+        return 1;
+    else if (point_in_board(GS, x+1, y) && GS->board[x+1][y].occupation == FREE)
+        return 1;
+    else if (point_in_board(GS, x+1, y+1) && GS->board[x+1][y+1].occupation == FREE)
+        return 1;
+    else if (point_in_board(GS, x, y+1) && GS->board[x][y+1].occupation == FREE)
+        return 1;
+    else if (point_in_board(GS, x-1, y+1) && GS->board[x-1][y-1].occupation == FREE)
+        return 1;
+    else
+        return 0;
 }
