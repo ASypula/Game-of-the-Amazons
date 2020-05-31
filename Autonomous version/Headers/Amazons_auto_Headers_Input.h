@@ -66,13 +66,14 @@ int found_horse(game_state* GS, int *dx, int *dy, int x, int y);
 
 void max_point (game_state* GS, int *dx, int*dy, int x, int y);
 /**
-* Function finds a tile with maximum number of points
+* Function finds a tile with maximum number of points (treasure)
 * @param *GS - game_state
 * @param *dx - pointer to x coordinate
 * @param *dy - pointer to y coordinate
 * @param x - x coordinate from which function is supposed to start checking
 * @param y - y coordinate from which function is supposed to start checking
 * (x, y) - starting position
+* @return maximum number of found treasure
 */
 
 #endif // _Input_H
