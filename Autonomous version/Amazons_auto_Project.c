@@ -50,11 +50,17 @@ int main(int argc, char *argv[]) {
         if(state.error == 0){
             //Placing amazons
 
-            place_amazons(GS);
-
-            system("cls");
-        
-            save_data_file(argv[4], GS);
+            if(place_amazons(GS))
+            {
+                system("cls");
+                save_data_file(argv[4], GS);
+                return 0;
+            }
+            else
+            {
+                printf ("Amazon cannot be placed on the board\n");
+                return 1;
+            }
         }
     }
 
