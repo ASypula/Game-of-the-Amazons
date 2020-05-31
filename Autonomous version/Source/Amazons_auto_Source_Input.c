@@ -86,8 +86,8 @@ void get_board_file(FILE* fp, struct game_state* GS) {
 	int i, j;
 	int placed_pawns = 0;
 	GS->positions = (int*)malloc(sizeof(positions));
-	for (i = 0; i < GS->fixed.height; i++) {
-		for (j = 0; j < GS->fixed.width; j++) {
+	for (i = 0; i < GS->fixed.width; i++) {
+		for (j = 0; j < GS->fixed.height; j++) {
 			GS->board[i][j] = get_tile_file(fp, GS);
 			if (GS->board[i][j].occupation == GS->player_list.ID) {
                 GS->positions = (int*) realloc (GS->positions, (placed_pawns+1) * sizeof(positions));
@@ -186,4 +186,39 @@ void read_file(char* file_name, struct game_state* GS){
 	get_player_data_file(fp, GS);
 
 	fclose(fp);
+}
+
+int found_horse (game_state* GS, int *dx, int*dy, int x, int y) {
+    int found = 0;
+    int i, j;
+    for (i = x; (i < GS->fixed.width) && !found; i++)
+    {
+        for (j = y; (j < GS->fixed.height) && !found; j++)
+        {
+            if (GS->board[i][j].artifact == HORSE)
+            {
+                *dx = i;
+                *dy = j;
+                found = 1;
+            }
+        }
+    }
+}
+
+void max_point (game_state* GS, int *dx, int*dy, int x, int y)
+{
+    int i, j;
+    int max_found = 0;
+    for (i = x; (i < GS->fixed.width) && (max_found != 5); i++)
+    {
+        for (j = y; (j < GS->fixed.height) && (max_found != 5); j++)
+        {
+            if (GS->board[i][j].treasure > max_found)
+            {
+                *dx = i;
+                *dy = j;
+                max_found = GS->board[i][j].treasure;
+            }
+        }
+    }
 }
