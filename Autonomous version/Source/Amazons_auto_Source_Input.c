@@ -23,7 +23,7 @@ int place_amazons(game_state *GS){
 }
 
 
-int get_multi_digit_file(FILE* fp) {
+int get_multi_digit_file(FILE* fp, game_state *GS) {
 
 	int c;
 	char buffer[12]; // Max 10 digit number
@@ -35,7 +35,8 @@ int get_multi_digit_file(FILE* fp) {
 
 		if (c != '\n' && c != ' ' && c != EOF) {
 			if (count >= 11) {
-				//Exception
+				printf("Error! Size number has more that 10 digits, unable to read!\n");
+				GS->error = 1;
 			}
 
 			buffer[count++] = (char)c;
@@ -44,6 +45,10 @@ int get_multi_digit_file(FILE* fp) {
 			buffer[count] = 0;
 
 			number = atoi(buffer);
+			if (number < 0) {
+				printf("Error! Size number is negative!\n");
+				GS->error = 1;
+			}
 
 			count = 0;
 		}
@@ -63,8 +68,10 @@ tile get_tile_file(FILE* fp, struct game_state* GS) {
 		c = getc(fp);
 
 		if (c != ' ' && c != '\n') {
-			if (count >= 2) {
+			if (count >= 3) {
 				//Exception
+				printf("Error in reading tile, tile has more than 3 digits!\n");
+				GS->error = 1;
 			}
 
 			buffer[count++] = c;
@@ -72,11 +79,24 @@ tile get_tile_file(FILE* fp, struct game_state* GS) {
 		else if (count > 0) {
 
 			temp.treasure = number(buffer[0]);
+			if (temp.treasure > 5 || temp.treasure < 0) {
+				printf("Error in reading tile, wrong value of treasure tile!\n");
+				GS->error = 1;
+			}
 			temp.artifact = number(buffer[1]);
+			if (temp.artifact > 3 || temp.artifact < 0) {
+				printf("Error in reading tile, wrong value of artifact tile!\n");
+				GS->error = 1;
+			}
 			temp.occupation = number(buffer[2]);
+			if (temp.occupation > 9 || temp.occupation < 0) {
+				printf("Error in reading tile, wrong value of occupation tile!\n");
+				GS->error = 1;
+			}
 
+			count = 0;
 		}
-	} while (c != ' ');
+	} while (c != ' ' && c!= EOF);
 
 	return temp;
 }
@@ -84,17 +104,9 @@ tile get_tile_file(FILE* fp, struct game_state* GS) {
 void get_board_file(FILE* fp, struct game_state* GS) {
 
 	int i, j;
-	int placed_pawns = 0;
-	GS->positions = (int*)malloc(sizeof(positions));
-	for (i = 0; i < GS->fixed.width; i++) {
-		for (j = 0; j < GS->fixed.height; j++) {
+	for (i = 0; i < GS->fixed.height; i++) {
+		for (j = 0; j < GS->fixed.width; j++) {
 			GS->board[i][j] = get_tile_file(fp, GS);
-			if (GS->board[i][j].occupation == GS->player_list.ID) {
-                GS->positions = (int*) realloc (GS->positions, (placed_pawns+1) * sizeof(positions));
-                GS->positions[placed_pawns].x = j;
-                GS->positions[placed_pawns].y = i; 
-                placed_pawns++;
-            }
 		}
 	}
 }
@@ -107,7 +119,7 @@ void get_player_data_file(FILE* fp, struct game_state* GS) {
 	int count = 0;
 	int lines = 0;
 	int type = 0; // 0 - name, 1 - ID, 2 - points
-	char bufor[15];
+	char bufor[16];
 
 	do {
 
@@ -119,11 +131,22 @@ void get_player_data_file(FILE* fp, struct game_state* GS) {
 		else {
 			if (c != ' ' && c != '\n') {
 
+				if (type == 0 && count >= 15) {
+					printf("Error! Readed name has more that 15 chars!\n");
+				}
+
+				if (type == 2 && count >= 15) {
+					printf("Error! Points number has more than 15 digits, unable to read!\n");
+				}
+
 				if (type == 0) {
 					GS->player_list[lines].name[count++] = (char)c;
 				}
 				else if (type == 1 || type == 2) {
 					bufor[count++] = (char)c;
+					if (c < 48 || c > 57) {
+						printf("Error! Score of a player cointains a char!\n");
+					}
 				}
 
 			}
@@ -136,6 +159,10 @@ void get_player_data_file(FILE* fp, struct game_state* GS) {
 				else if (type == 1) {
 					bufor[count] = 0;
 					GS->player_list[lines].ID = atoi(bufor);
+					if (GS->player_list[lines].ID < 0 || GS->player_list[lines].ID > 8) {
+						printf("Error! Wrong value of player ID!\n");
+						GS->error = 1;
+					}
 					type = 2;
 				}
 				else if (type == 2) {
@@ -158,34 +185,40 @@ void read_file(char* file_name, struct game_state* GS){
 
 	FILE* fp = fopen(file_name, "r");
 	
-	GS->fixed.height = get_multi_digit_file(fp);
-
-	// WIDTH
-
-	GS->fixed.width = get_multi_digit_file(fp);
-
-	// ALLOCATING MEMORY FOR THE BOARD
-	
-	GS->board = malloc(GS->fixed.height * sizeof(**(GS->board)));
-	int p = 0;
-	while (p < GS->fixed.height) {
-		*(GS->board + p) = malloc(GS->fixed.width * sizeof(**(GS->board)));
-		p++;
+	if (fp == NULL) {
+		printf("Error in opening file!");
+		GS->error = 1;
 	}
+	else {
+		GS->fixed.height = get_multi_digit_file(fp, GS);
 
-	// ALLOCATING MEMORY FOR THE PLAYER_DATA
+		// WIDTH
 
-	GS->player_list = (int*)malloc(sizeof(player_data) * 8);
+		GS->fixed.width = get_multi_digit_file(fp, GS);
 
-	// BOARD
+		// ALLOCATING MEMORY FOR THE BOARD
 
-	get_board_file(fp, GS);
+		GS->board = malloc(GS->fixed.height * sizeof(**(GS->board)));
+		int p = 0;
+		while (p < GS->fixed.height) {
+			*(GS->board + p) = malloc(GS->fixed.width * sizeof(**(GS->board)));
+			p++;
+		}
 
-	// PLAYER DATA
+		// ALLOCATING MEMORY FOR THE PLAYER_DATA
 
-	get_player_data_file(fp, GS);
+		GS->player_list = (int*)malloc(sizeof(player_data) * 8);
 
-	fclose(fp);
+		// BOARD
+
+		get_board_file(fp, GS);
+
+		// PLAYER DATA
+
+		get_player_data_file(fp, GS);
+
+		fclose(fp);
+	}
 }
 
 int found_horse (game_state* GS, int *dx, int*dy, int x, int y) {
