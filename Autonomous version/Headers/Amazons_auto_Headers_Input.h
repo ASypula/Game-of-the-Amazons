@@ -52,4 +52,27 @@ void read_file(char* file_name, struct game_state* GS);
 * @param *GS - game_state
 */
 
+int found_horse(game_state* GS, int *dx, int *dy, int x, int y);
+/**
+* Function checks if a horse is positioned on the board
+* @param *GS - game_state
+* @param *dx - pointer to x coordinate
+* @param *dy - pointer to y coordinate
+* @param x - x coordinate from which function is supposed to start checking
+* @param y - y coordinate from which function is supposed to start checking
+* (x, y) - starting position
+* @return 0 - if there is no horse on the board, 1 - if there is a horse
+*/
+
+void max_point (game_state* GS, int *dx, int*dy, int x, int y);
+/**
+* Function finds a tile with maximum number of points
+* @param *GS - game_state
+* @param *dx - pointer to x coordinate
+* @param *dy - pointer to y coordinate
+* @param x - x coordinate from which function is supposed to start checking
+* @param y - y coordinate from which function is supposed to start checking
+* (x, y) - starting position
+*/
+
 #endif // _Input_H
