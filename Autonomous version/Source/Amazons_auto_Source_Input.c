@@ -236,6 +236,7 @@ int found_horse (game_state* GS, int *dx, int*dy, int x, int y) {
             }
         }
     }
+    return found;
 }
 
 int max_point (game_state* GS, int *dx, int*dy, int x, int y)
