@@ -73,6 +73,7 @@ typedef struct game_state {
     fixed_inf fixed;            /**< information fixed by player                */
     int current_player;         /**< id of player currently making move         */
     int n_player;               /**< n-th player                                */
+    int error;					/**< Does program got errors during reading file*/
     int c;                      /**< currently stored character                 */
     int already_placed_amazons; /**< number of already placed amazons           */
     /*@}*/
