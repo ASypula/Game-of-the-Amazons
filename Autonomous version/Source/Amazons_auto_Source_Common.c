@@ -33,7 +33,7 @@ int number(int x)
     return x;
 }
 
-int fmax (int x, int y)
+int find_max (int x, int y)
 {
     if  (x > y)
         return x;
@@ -44,6 +44,6 @@ int fmax (int x, int y)
 int fmax_of8 (int x1, int x2, int x3, int x4, int x5, int x6, int x7, int x8)
 {
     int max_x;
-    max_x = fmax(fmax(fmax(x1, x2), fmax(x3, x4)), fmax(fmax(x5, x6), fmax(x7, x8)));
+    max_x = find_max(find_max(find_max(x1, x2), find_max(x3, x4)), find_max(find_max(x5, x6), find_max(x7, x8)));
     return max_x;
 }
