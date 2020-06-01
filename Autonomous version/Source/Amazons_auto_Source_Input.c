@@ -103,7 +103,7 @@ tile get_tile_file(FILE* fp, struct game_state* GS) {
 
 			count = 0;
 		}
-	} while (c != ' ' && c!= EOF);
+	} while (c != ' ' && c != '\n' && c!= EOF);
 
 	return temp;
 }
