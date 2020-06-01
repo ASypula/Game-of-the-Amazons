@@ -12,13 +12,14 @@ int find_ID (game_state* GS)
 
 void find_amazons (game_state* GS)
 {
+    int i, j;
     int id = find_ID(GS);
     int placed_pawns = 0;
-	GS->positions = (int*)malloc(sizeof(positions));
+	GS->positions = (int*)malloc(sizeof(coordinate));
 	for (i = 0; i < GS->fixed.height; i++) {
 		for (j = 0; j < GS->fixed.width; j++) {
 			if (GS->board[i][j].occupation == id) {
-                GS->positions = (int*) realloc (GS->positions, (placed_pawns+1) * sizeof(positions));
+                GS->positions = (int*) realloc (GS->positions, (placed_pawns+1) * sizeof(coordinate));
                 GS->positions[placed_pawns].x = j;
                 GS->positions[placed_pawns].y = i; 
                 placed_pawns++;
@@ -104,19 +105,19 @@ void move_amazon(game_state* GS)
     GS->point_1.x = *x;;
     GS->point_1.y = *y;
     GS->board[GS->point_1.x][GS->point_1.y].occupation = find_ID(GS);
-    GS->positions[n_amazon].x = GS->point_1.x;
-    GS->positions[n_amazon].y = GS->point_1.y;
+    GS->positions[*n_amazon].x = GS->point_1.x;
+    GS->positions[*n_amazon].y = GS->point_1.y;
     get_treasure(GS);
 
     switch (GS->board[GS->point_1.x][GS->point_1.y].artifact)
     {
         /* no artifact */
         case 0:
-            shoot_arrow(GS);
+            shoot_arrow(GS, n_amazon);
             break;
         /* horse*/
         case 1:
-            shoot_arrow(GS);
+            shoot_arrow(GS, n_amazon);
             move_amazon(GS);
             break;
         /* broken arrow */
@@ -124,14 +125,13 @@ void move_amazon(game_state* GS)
             break;
         /* spear */
         case 3:
-            shoot_spear(GS);
+            shoot_spear(GS, n_amazon);
             break;
         default:
             printf("Unknown artifact");
             break;
         }
         GS->board[GS->point_1.x][GS->point_1.y].artifact = FREE;
-    }
 }
 
 int is_occupied(game_state* GS, int x, int y)
@@ -182,25 +182,26 @@ int line_with_enemy (game_state* GS, int p, int q, int *dx, int *dy, int n_amazo
 
 int tile_with_closest_enemy (game_state* GS, int *x, int *y, int n_amazon)
 {
-    if (line_with_enemy((GS, -1, 0, x, y, n_amazon))) //left line
+    if (line_with_enemy(GS, -1, 0, x, y, n_amazon)) //left line
         return 1;
-    else if (line_with_enemy((GS, -1, -1, x, y, n_amazon))) //left-up line
+    else if (line_with_enemy(GS, -1, -1, x, y, n_amazon)) //left-up line
             return 1;
-    else if (line_with_enemy((GS, 0, -1, x, y, n_amazon))) //up line
+    else if (line_with_enemy(GS, 0, -1, x, y, n_amazon)) //up line
             return 1;
-    else if (line_with_enemy((GS, 1, -1, x, y, n_amazon))) //right-up line
+    else if (line_with_enemy(GS, 1, -1, x, y, n_amazon)) //right-up line
             return 1;
-    else if (line_with_enemy((GS, 1, 0, x, y, n_amazon))) //right line
+    else if (line_with_enemy(GS, 1, 0, x, y, n_amazon)) //right line
             return 1;
-    else if (line_with_enemy((GS, 1, 1, x, y, n_amazon))) //right-down line
+    else if (line_with_enemy(GS, 1, 1, x, y, n_amazon)) //right-down line
             return 1;
-    else if (line_with_enemy((GS, 0, 1, x, y, n_amazon))) //down line
+    else if (line_with_enemy(GS, 0, 1, x, y, n_amazon)) //down line
             return 1;
-    else if (line_with_enemy((GS, -1, 1, x, y, n_amazon))) //left-down line
+    else if (line_with_enemy(GS, -1, 1, x, y, n_amazon)) //left-down line
             return 1;
     else
         return 0;
 }
+
 
 int max_points_line (game_state* GS, int p, int q, int *dx, int *dy, int n_amazon)
 {
