@@ -63,13 +63,13 @@ void shoot_arrow(game_state* GS, int *n_amazon)
 {
     int *x;
     int *y;
-    if (tile_with_closest_enemy (GS, x, y, n_amazon))
+    if (tile_with_closest_enemy (GS, x, y, *n_amazon))
     {
         GS->board[*x][*y].occupation = MISSILE;
     }
     else
     {
-        if (random_arrow(GS, x, y, n_amazon))
+        if (random_arrow(GS, x, y, *n_amazon))
         {
             GS->board[*x][*y].occupation = MISSILE;
         }
@@ -88,7 +88,7 @@ void shoot_spear(game_state* GS, int *n_amazon)
         GS->board[*x][*y].occupation = MISSILE;
     }
     else*/
-    if (random_arrow(GS, x, y, n_amazon))
+    if (random_arrow(GS, x, y, *n_amazon))
     {
         GS->board[*x][*y].occupation = MISSILE;
     }
