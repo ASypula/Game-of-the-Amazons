@@ -12,8 +12,6 @@
 #define HORSE 1
 #define BROKEN_ARROW 2
 #define SPEAR 3
-#define NORMAL_MOVE 1
-#define Starting_position 0
 
 /**
 * A structure with date of a tile
@@ -64,7 +62,7 @@ typedef struct fixed_inf{
 */
 typedef struct game_state {
     /*@{*/
-    char name[NAME_LENGTH];     /**< name of our programme                      */
+    char* name;                 /**< name of our programme                      */
     tile** board;               /**< array of tiles (board)                     */
     player_data* player_list;   /**< list of players                            */
     coordinate point_1;         /**< coordinates of a point 1                   */
@@ -100,7 +98,7 @@ int number(int x);
 * @return value - a corresponding decimal number
 */
 
-int fmax(int x, int y);
+int find_max(int x, int y);
 /**
 * function returning the maximum of two values
 * @param x - first value to be compared
