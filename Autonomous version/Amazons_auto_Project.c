@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
 
     game_state state;
     game_state* GS = &state;
-    GS->name = {'D', 'o', 'u', 'b', 'l', 'e', 'A');
+    GS->name = {'D', 'o', 'u', 'b', 'l', 'e', 'A'};
 
     state.error = 0;
     state.current_player = 0;
@@ -42,7 +42,7 @@ int main(int argc, char *argv[]) {
                     break;
                 }
                 else
-                    state.fixed.number_of_pawns = state.fixed.number_of_pawns * 10 + atoi(c); //atoi czy inna funkcja
+                    state.fixed.number_of_pawns = state.fixed.number_of_pawns * 10 + (c - '0');
             }
         }
         
