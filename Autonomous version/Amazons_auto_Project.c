@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
 
     game_state state;
     game_state* GS = &state;
-    GS->name = "TripleA";
+    GS->name = {'D', 'o', 'u', 'b', 'l', 'e', 'A');
 
     state.error = 0;
     state.current_player = 0;
@@ -81,7 +81,7 @@ int main(int argc, char *argv[]) {
     }
 
     // one parameter, displaying the name
-    else if (argc == 2 && !=strcmp(argv[1], "name"))
+    else if (argc == 2 && !strcmp(argv[1], "name"))
     {
         printf ("Name of the player: %s", GS->name);
     }
@@ -103,7 +103,7 @@ int main(int argc, char *argv[]) {
     printf("o88o     o8888o o888o o888o o888o `Y888''8o d8888888P  `Y8bod8P' o888o o888o 8''888P'\n\n");
     White_txt();
 
-
+    int p = 0;
     //Freeing the memory
     while (p < state.fixed.height) {
         free(*(state.board + p));
