@@ -119,8 +119,6 @@ void get_board_file(FILE* fp, struct game_state* GS) {
 }
 
 void get_player_data_file(FILE* fp, struct game_state* GS) {
-	
-	getc(fp); // Just to get previous '\n'
 
 	int c;
 	int count = 0;
@@ -131,19 +129,17 @@ void get_player_data_file(FILE* fp, struct game_state* GS) {
 	do {
 
 		c = getc(fp);
-
-		if (c == '\n') {
-			lines++;
-		}
-		else {
-			if (c != ' ' && c != '\n') {
+		
+			if (c != ' ' && c != '\n' && c!= EOF) {
 
 				if (type == 0 && count >= 15) {
 					printf("Error! Readed name has more that 15 chars!\n");
+					GS->error = 1;
 				}
 
 				if (type == 2 && count >= 15) {
 					printf("Error! Points number has more than 15 digits, unable to read!\n");
+					GS->error = 1;
 				}
 
 				if (type == 0) {
@@ -153,6 +149,7 @@ void get_player_data_file(FILE* fp, struct game_state* GS) {
 					bufor[count++] = (char)c;
 					if (c < 48 || c > 57) {
 						printf("Error! Score of a player cointains a char!\n");
+						GS->error = 1;
 					}
 				}
 
@@ -175,12 +172,17 @@ void get_player_data_file(FILE* fp, struct game_state* GS) {
 				else if (type == 2) {
 					bufor[count] = 0;
 					GS->player_list[lines].points = atoi(bufor);
+					if (GS->player_list[lines].ID < 0) {
+						printf("Error! Negative value of player's points!\n");
+						GS->error = 1;
+					}
 					type = 0;
+					lines++;
 				}
 
 				count = 0;
 			}
-		}
+
 	} while (c != EOF);
 
 	GS->fixed.number_of_players = lines;
