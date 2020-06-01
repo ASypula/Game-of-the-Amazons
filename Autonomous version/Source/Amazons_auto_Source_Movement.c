@@ -15,11 +15,11 @@ void find_amazons (game_state* GS)
     int i, j;
     int id = find_ID(GS);
     int placed_pawns = 0;
-	GS->positions = (int*)malloc(sizeof(coordinate));
+	GS->positions = (coordinate*)malloc(sizeof(coordinate));
 	for (i = 0; i < GS->fixed.height; i++) {
 		for (j = 0; j < GS->fixed.width; j++) {
 			if (GS->board[i][j].occupation == id) {
-                GS->positions = (int*) realloc (GS->positions, (placed_pawns+1) * sizeof(coordinate));
+                GS->positions = (coordinate*) realloc (GS->positions, (placed_pawns+1) * sizeof(coordinate));
                 GS->positions[placed_pawns].x = j;
                 GS->positions[placed_pawns].y = i; 
                 placed_pawns++;
@@ -281,7 +281,7 @@ int max_points_tile (game_state* GS, int *x, int *y, int n_amazon)
         return -1;
 }
 
-int valid_path_for_arrow(game_state* GS, int *dx, int *dy, int p, int q, int n_amazon)
+int valid_path_for_arrow(game_state* GS, int p, int q, int *dx, int *dy, int p, int q, int n_amazon)
 {
     int x = GS->positions[n_amazon].x;
     int y = GS->positions[n_amazon].y;
