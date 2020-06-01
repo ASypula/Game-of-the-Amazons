@@ -87,7 +87,7 @@ void shoot_spear(game_state* GS, int *n_amazon)
         GS->board[*x][*y].occupation = MISSILE;
     }
     else*/
-    if (random_spear(GS, x, y, n_amazon))
+    if (random_arrow(GS, x, y, n_amazon))
     {
         GS->board[*x][*y].occupation = MISSILE;
     }
@@ -300,6 +300,7 @@ int valid_path_for_arrow(game_state* GS, int *dx, int *dy, int p, int q, int n_a
         return 1;
     }
 }
+
 
 int random_arrow (game_state* GS, int *x, int *y, int n_amazon)
 {
