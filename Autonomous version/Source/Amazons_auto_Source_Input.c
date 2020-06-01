@@ -334,7 +334,7 @@ int best_place (game_state* GS, int *found_x, int *found_y)
     }
     if (!good_place)
     {
-        while (max_point(GS, dx, dy, x, y, max_search) && !(good_place = tile_available(GS, *dx, *dy, found_x, found_y) && max_search >= 0)
+        while (max_point(GS, dx, dy, x, y, max_search) && !(good_place = tile_available(GS, *dx, *dy, found_x, found_y) && max_search >= 0))
         {
             x = *dx + 1;
             y = *dy;
