@@ -1,12 +1,14 @@
 ﻿#include "Input.h"
 
-
-
 int place_amazons(game_state *GS){
-    
+
     int id = find_ID(GS);
-    int *x, *y;
-    
+    int *x;
+    x = (int*) malloc (sizeof(int));
+    int *y;
+    y = (int*) malloc (sizeof(int));
+    find_amazons(GS);
+
     if(GS->already_placed_amazons < GS->fixed.number_of_pawns){
         if (best_place (GS, x, y))
         {
@@ -14,6 +16,7 @@ int place_amazons(game_state *GS){
             GS->board[*x][*y].artifact = FREE;
             GS->board[*x][*y].occupation = id;
             GS->already_placed_amazons++;
+            //print_board(GS);
             return 1;
         }
         else
@@ -233,9 +236,9 @@ void read_file(char* file_name, struct game_state* GS){
 int found_horse (game_state* GS, int *dx, int*dy, int x, int y) {
     int found = 0;
     int i, j;
-    for (i = x; (i < GS->fixed.width) && !found; i++)
+    for (i = x; (i < GS->fixed.height) && !found; i++)
     {
-        for (j = y; (j < GS->fixed.height) && !found; j++)
+        for (j = y; (j < GS->fixed.width) && !found; j++)
         {
             if (GS->board[i][j].artifact == HORSE)
             {
@@ -252,9 +255,9 @@ int max_point (game_state* GS, int *dx, int*dy, int x, int y, int search_max)
 {
     int i, j;
     int max_found = 0;
-    for (i = x; (i < GS->fixed.width) && (!max_found); i++)
+    for (i = x; (i < GS->fixed.height) && (!max_found); i++)
     {
-        for (j = y; (j < GS->fixed.height) && (!max_found); j++)
+        for (j = y; (j < GS->fixed.width) && (!max_found); j++)
         {
             if (GS->board[i][j].treasure == search_max)
             {
@@ -264,8 +267,14 @@ int max_point (game_state* GS, int *dx, int*dy, int x, int y, int search_max)
             }
         }
     }
+    if (!max_found)
+    {
+        *dx = i;
+        *dy = j;
+    }
     return max_found;
 }
+
 
 int tile_available (game_state* GS, int x, int y, int *found_x, int *found_y)
 {
@@ -326,27 +335,68 @@ int best_place (game_state* GS, int *found_x, int *found_y)
     int x = 0;
     int y = 0;
     int *dx;
+    dx = (int*) malloc (sizeof(int));
     int *dy;
+    dy = (int*) malloc (sizeof(int));
     int max_search = 5;  //maximum value of treasure
-    int good_place = 0;
-    while (found_horse(GS, dx, dy, x, y) && !(good_place = tile_available(GS, *dx, *dy, found_x, found_y)))
+    int no_place = 1;
+    while (no_place && found_horse(GS, dx, dy, x, y))
     {
-        x = *dx + 1;
-        y = *dy;
-    }
-    if (!good_place)
-    {
-        while (max_point(GS, dx, dy, x, y, max_search) && !(good_place = tile_available(GS, *dx, *dy, found_x, found_y) && max_search >= 0))
+        if (!(tile_available(GS, *dx, *dy, found_x, found_y)))
         {
+            if (*dx >= GS->fixed.height)
+            {
+                *dx = -1;
+                (*dy)++;
+            }
             x = *dx + 1;
             y = *dy;
-            if ((x == GS->fixed.width) && (y == GS->fixed.height))
+        }
+        else
+        {
+            no_place = 0;
+        }
+    }
+    if (no_place)
+    {
+        while (no_place)
+        {
+            while (max_search >= 0 && !max_point(GS, dx, dy, x, y, max_search))
             {
-                x = *dx = 0;
-                y = *dy = 0;
-                max_search--;
+                if ((*dx == GS->fixed.height) && (*dy == GS->fixed.width))
+                {
+                    x = *dx = 0;
+                    y = *dy = 0;
+                    max_search--;
+                }
+                else if (*dx = GS->fixed.height)
+                {
+                    *dx = 0;
+                    *dy++;
+                }
+                else
+                {
+                    x = *dx + 1;
+                    y = *dy;
+                }
+            }
+            if(max_point(GS, dx, dy, x, y, max_search) && tile_available(GS, *dx, *dy, found_x, found_y) && max_search > 0)
+                no_place = 0;
+            else
+            {
+                if (*dx >= GS->fixed.height)
+                {
+                    *dx = -1;
+                    *dy++;
+                }
+                x = *dx + 1;
+                y = *dy;
             }
         }
     }
-    return good_place;
+    if (no_place)
+        return 0;
+    else
+        return 1;
 }
+
