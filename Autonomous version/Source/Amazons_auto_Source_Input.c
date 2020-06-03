@@ -34,7 +34,7 @@ int get_multi_digit_file(FILE* fp, game_state *GS) {
 	return number;
 }
 
-tile get_tile_file(FILE* fp, struct game_state* GS) {
+tile get_tile_file(FILE* fp, struct game_state* GS, int i, int j) {
 
 	tile temp;
 	int c;
@@ -44,10 +44,10 @@ tile get_tile_file(FILE* fp, struct game_state* GS) {
 	do {
 		c = getc(fp);
 
-		if (c != ' ' && c != '\n') {
+		if (c != ' ' && c != '\n' && c != EOF) {
 			if (count >= 3) {
 				//Exception
-				printf("Error in reading tile, tile has more than 3 digits!\n");
+				printf("Error in reading tile[%d][%d], tile has more than 3 digits!\n", i, j);
 				GS->error = 1;
 			}
 
@@ -57,17 +57,17 @@ tile get_tile_file(FILE* fp, struct game_state* GS) {
 
 			temp.treasure = number(buffer[0]);
 			if (temp.treasure > 5 || temp.treasure < 0) {
-				printf("Error in reading tile, wrong value of treasure tile!\n");
+				printf("Error in reading tile[%d][%d], wrong value of treasure tile!\n", i, j);
 				GS->error = 1;
 			}
 			temp.artifact = number(buffer[1]);
 			if (temp.artifact > 3 || temp.artifact < 0) {
-				printf("Error in reading tile, wrong value of artifact tile!\n");
+				printf("Error in reading tile[%d][%d], wrong value of artifact tile!\n", i, j);
 				GS->error = 1;
 			}
 			temp.occupation = number(buffer[2]);
 			if (temp.occupation > 9 || temp.occupation < 0) {
-				printf("Error in reading tile, wrong value of occupation tile!\n");
+				printf("Error in reading tile[%d][%d], wrong value of occupation tile!\n", i, j);
 				GS->error = 1;
 			}
 
@@ -83,7 +83,7 @@ void get_board_file(FILE* fp, struct game_state* GS) {
 	int i, j;
 	for (i = 0; i < GS->fixed.height; i++) {
 		for (j = 0; j < GS->fixed.width; j++) {
-			GS->board[i][j] = get_tile_file(fp, GS);
+			GS->board[i][j] = get_tile_file(fp, GS, i, j);
 		}
 	}
 }
@@ -99,7 +99,7 @@ void get_player_data_file(FILE* fp, struct game_state* GS) {
 	do {
 
 		c = getc(fp);
-		
+
 			if (c != ' ' && c != '\n' && c!= EOF) {
 
 				if (type == 0 && count >= 15) {
@@ -142,7 +142,7 @@ void get_player_data_file(FILE* fp, struct game_state* GS) {
 				else if (type == 2) {
 					bufor[count] = 0;
 					GS->player_list[lines].points = atoi(bufor);
-					if (GS->player_list[lines].ID < 0) {
+					if (GS->player_list[lines].points < 0) {
 						printf("Error! Negative value of player's points!\n");
 						GS->error = 1;
 					}
@@ -158,12 +158,13 @@ void get_player_data_file(FILE* fp, struct game_state* GS) {
 	GS->fixed.number_of_players = lines;
 }
 
+
 void read_file(char* file_name, struct game_state* GS){
 
 	// HEIGHT
 
 	FILE* fp = fopen(file_name, "r");
-	
+
 	if (fp == NULL) {
 		printf("Error in opening file!");
 		GS->error = 1;
@@ -186,7 +187,7 @@ void read_file(char* file_name, struct game_state* GS){
 
 		// ALLOCATING MEMORY FOR THE PLAYER_DATA
 
-		GS->player_list = (int*)malloc(sizeof(player_data) * 8);
+		GS->player_list = (player_data*)malloc(sizeof(player_data) * 8);
 
 		// BOARD
 
