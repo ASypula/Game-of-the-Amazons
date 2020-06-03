@@ -3,26 +3,6 @@
 
 #include "Common.h"
 
-void generate_board(struct game_state* GS);
-/**
-* A function fills each tile of the board with random treasure and artifact
-* @param *GS - game_state
-*/
-
-
-//Function drawing given board with colors
-void draw_board_color(struct game_state* GS);
-/**
-* A function draws a board using colors
-* @param *GS - game_state
-*/
-
-void order_scores(struct game_state* GS);
-/*
-* Creates a new structure by copying the player structure
-* sorts a new structure by the number of points
-* @param *GS - game state
-*/
 
 void add_player_data_file(FILE* fp, struct game_state* GS);
 /*
