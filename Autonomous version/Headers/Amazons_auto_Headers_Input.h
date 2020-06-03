@@ -23,11 +23,12 @@ int get_multi_digit_file(FILE* fp, struct game_state* GS);
 * @return int - number 
 */
 
-tile get_tile_file(FILE* fp, struct game_state* GS);
+tile get_tile_file(FILE* fp, struct game_state* GS, int i, int j);
 /**
 * Function reads next 3 digits from the file (tile) and returns them as
 * a tile structure
 * @param *fp - file pointer
+* @param *GS - game_state
 * @param *GS - game_state
 * @return tile - data of a tile
 */
