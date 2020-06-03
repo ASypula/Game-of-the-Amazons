@@ -3,27 +3,31 @@
 
 #include "Common.h"
 
-int find_ID (game_state* GS);
-/**
-* finding ID of our programme
-* @param *GS - game_state
-* @return our ID
-*/
 
 void find_amazons (game_state* GS);
 /**
 * finding its own amazons on the board and saving their positions
+* saves the number of our already placed pawns
 * @param *GS - game_state
 */
 
 void choose_amazon(game_state* GS, int* x, int* y, int *n_amazon);
 /**
-* programme chooses an amazon to move
+* programme chooses an amazon that can get the highest available treasure
 * function also checks if the chosen amazon belongs to current player and whether it has valid moves
 * @param *GS - game_state
 * @param *x  - x coordinate
 * @param *y  - y coordinate
 * @param *n_amazon - amazon with a path with the highest treasure
+*/
+
+void get_treasure(game_state* GS, int x, int y);
+/**
+* gives the treasure to the player (adds the number to the score of current player), deletes it from the board
+* @param *GS - game_state
+* @param x - x coordinate
+* @param y - y coordinate
+* (x, y) - tile from which an amazon gets the treasure
 */
 
 int point_in_board (game_state* GS, int x, int y);
@@ -33,6 +37,15 @@ int point_in_board (game_state* GS, int x, int y);
 * @param x  - x coordinate
 * @param y  - y coordinate
 * @return 1 if the point is inside the board, 0 if the point is outside
+*/
+
+int is_occupied(game_state* GS, int x, int y);
+/**
+* checks whether a tile is occupied (free) or not
+* @param *GS - game_state
+* @param x - x coordinate
+* @param y - y coordinate
+* @return 1 if tile is occupied, 0 if it is free
 */
 
 int max_points_line (game_state* GS, int p, int q, int *dx, int *dy, int n_amazon);
@@ -56,41 +69,6 @@ int max_points_tile (game_state* GS, int *x, int *y, int n_amazon);
 * @param *y  - y coordinate
 * @param n_amazon - number of the amazon that is being checked
 * @return -1 if the amazon cannot make a move or otherwise the maximum value of available treasure
-*/
-
-void get_treasure(game_state* GS);
-/**
-* gives the treasure to the player (adds the number to the score of current player), deletes it from the board
-* @param *GS - game_state
-*/
-
-void shoot_arrow(game_state* GS, int* n_amazon);
-/**
-* enables the amazon to shoot an arrow (with valid path), updates the board with missile's position
-* @param *GS - game_state
-* @param *n_amazon - number of the moving amazon
-*/
-
-void shoot_spear(game_state* GS, int* n_amazon);
-/**
-* enables the amazon to shoot a spear (with valid path), updates the board with missile's position
-* @param *GS - game_state
-* @param *n_amazon - number of the moving amazon
-*/
-
-void move_amazon(game_state* GS);
-/**
-* enables moving an amazon: includes functions for choosing the amazon, moving it and continuing the move depending on the artifact
-* @param *GS - game_state
-*/
-
-int is_occupied(game_state* GS, int x, int y);
-/**
-* checks whether a tile is occupied (free) or not
-* @param *GS - game_state
-* @param x - x coordinate
-* @param y - y coordinate
-* @return 1 if tile is occupied, 0 if it is free
 */
 
 int tile_with_enemy (game_state* GS, int x, int y);
@@ -157,6 +135,28 @@ int random_spear (game_state* GS, int *x, int *y, int n_amazon);
 * @param n_amazon - number of the amazon that is being checked
 * @return 1 if the spear can be shot, 0 if it cannot
 */
+
+void shoot_arrow(game_state* GS, int* n_amazon);
+/**
+* enables the amazon to shoot an arrow (with valid path), updates the board with missile's position
+* @param *GS - game_state
+* @param *n_amazon - number of the moving amazon
+*/
+
+void shoot_spear(game_state* GS, int* n_amazon);
+/**
+* enables the amazon to shoot a spear (with valid path), updates the board with missile's position
+* @param *GS - game_state
+* @param *n_amazon - number of the moving amazon
+*/
+
+int move_amazon(game_state* GS);
+/**
+* enables moving an amazon: includes functions for choosing the amazon, moving it and continuing the move depending on the artifact
+* @param *GS - game_state
+* @return 1 if an amazon can make a valid move, 0 if no amazon can make a move
+*/
+
 
 #endif // _Movement_H
 
