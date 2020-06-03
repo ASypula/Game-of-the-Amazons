@@ -1,14 +1,13 @@
 ﻿#include "Output.h"
 
-
 void add_player_data_file(FILE* fp, struct game_state* GS) {
     int i;
 
     for (i = 0; i < GS->fixed.number_of_players; i++) {
         fprintf(fp, "%s ", GS->player_list[i].name);
         fprintf(fp, "%d ", GS->player_list[i].ID);
-        fprintf(fp, "%d ", GS->player_list[i].points);
-        fprintf(fp, "\n");
+        fprintf(fp, "%d\n", GS->player_list[i].points);
+
 
     }
 }
@@ -22,9 +21,13 @@ void add_tiles_file(FILE* fp, struct game_state* GS) {
 
     for (i = 0; i < GS->fixed.height; i++) {
         for (j = 0; j < GS->fixed.width; j++) {
-            fprintf(fp, "%d%d%d ", GS->board[i][j].treasure, GS->board[i][j].artifact, GS->board[i][j].occupation);
+            if (j == (GS->fixed.width - 1)) {
+                fprintf(fp, "%d%d%d\n", GS->board[i][j].treasure, GS->board[i][j].artifact, GS->board[i][j].occupation);
+            }
+            else {
+                fprintf(fp, "%d%d%d ", GS->board[i][j].treasure, GS->board[i][j].artifact, GS->board[i][j].occupation);
+            }
         }
-        fprintf(fp, "\n");
     }
 }
 
@@ -32,17 +35,22 @@ void save_data_file(char* file_name, struct game_state* GS) {
 
     FILE* fp = fopen(file_name, "w");
 
-    //Printing size
+    if (fp == NULL) {
+        printf("Error in saving file!");
+    }
+    else {
+        //Printing size
 
-    add_size_file(fp, GS);
+        add_size_file(fp, GS);
 
-    //Printing tiles
+        //Printing tiles
 
-    add_tiles_file(fp, GS);
+        add_tiles_file(fp, GS);
 
-    //Printing player data
+        //Printing player data
 
-    add_player_data_file(fp, GS);
+        add_player_data_file(fp, GS);
 
-    fclose(fp);
+        fclose(fp);
+    }
 }
