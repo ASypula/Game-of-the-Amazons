@@ -1,38 +1,5 @@
 ﻿#include "Input.h"
 
-int place_amazons(game_state *GS){
-
-    int id = find_ID(GS);
-    int *x;
-    x = (int*) malloc (sizeof(int));
-    int *y;
-    y = (int*) malloc (sizeof(int));
-    find_amazons(GS);
-
-    if(GS->already_placed_amazons < GS->fixed.number_of_pawns){
-        if (best_place (GS, x, y))
-        {
-            GS->board[*x][*y].treasure = FREE;
-            GS->board[*x][*y].artifact = FREE;
-            GS->board[*x][*y].occupation = id;
-            GS->already_placed_amazons++;
-            //print_board(GS);
-            return 1;
-        }
-        else
-        {
-            printf ("There is no valid tile to place an amazon.\n");
-            return 0;
-        }
-    }
-    else
-    {
-        printf ("All amazons are already placed on the board.\n");
-        return 0;
-    }
-}
-
-
 int get_multi_digit_file(FILE* fp, game_state *GS) {
 
 	int c;
@@ -399,4 +366,36 @@ int best_place (game_state* GS, int *found_x, int *found_y)
     else
         return 1;
 }
+
+int place_amazons(game_state *GS){
+
+    int id = find_ID(GS);
+    int *x;
+    x = (int*) malloc (sizeof(int));
+    int *y;
+    y = (int*) malloc (sizeof(int));
+    find_amazons(GS);
+
+    if(GS->already_placed_amazons < GS->fixed.number_of_pawns){
+        if (best_place (GS, x, y))
+        {
+            GS->board[*x][*y].treasure = FREE;
+            GS->board[*x][*y].artifact = FREE;
+            GS->board[*x][*y].occupation = id;
+            GS->already_placed_amazons++;
+            return 1;
+        }
+        else
+        {
+            printf ("There is no valid tile to place an amazon.\n");
+            return 0;
+        }
+    }
+    else
+    {
+        printf ("All amazons are already placed on the board.\n");
+        return 0;
+    }
+}
+
 
