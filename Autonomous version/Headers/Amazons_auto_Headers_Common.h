@@ -84,11 +84,11 @@ int is_digit (char c);
 * @return 1 if c is a digit, 0 otherwise
 */
 
-int get_next(int* c);
+int find_ID (game_state* GS);
 /**
-* function that gets next char after whitespaces
-* @param *c - currently stored character (the one previously taken)
-* @return next character
+* function searches for ID of our programme
+* @param *GS - game state
+* @return ID number of our programme
 */
 
 int number(int x);
@@ -118,6 +118,12 @@ int fmax_of8(int x1, int x2, int x3, int x4, int x5, int x6, int x7, int x8);
 * @param x7 - seventh value to be compared
 * @param x8 - eighth value to be compared
 * @return maximum of eight values or if they're equal then any of them
+*/
+
+void free_memory (game_state* GS);
+/**
+* function freeing all pointers from GS also including GS
+* @param *GS - game state
 */
 
 #endif // _Common_H
