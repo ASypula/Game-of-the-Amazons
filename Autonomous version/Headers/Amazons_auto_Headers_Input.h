@@ -29,7 +29,8 @@ tile get_tile_file(FILE* fp, struct game_state* GS, int i, int j);
 * a tile structure
 * @param *fp - file pointer
 * @param *GS - game_state
-* @param *GS - game_state
+* @param i - x coordinate of readead tile
+* @param j - y coordinate of readead tile
 * @return tile - data of a tile
 */
 
