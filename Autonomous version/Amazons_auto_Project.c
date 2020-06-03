@@ -2,8 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <windows.h>
-#include <conio.h>
 #include "Common.h"
 #include "Output.h"
 #include "Input.h"
@@ -11,22 +9,17 @@
 
 int main(int argc, char *argv[]) {
 
-    //Rand seed
-
-    int seed;
-    time_t tt;
-    seed = time(&tt);
-    srand(seed);
-
     //Declaring structure and first zero values
 
     game_state state;
     game_state* GS = &state;
-    GS->name = {'D', 'o', 'u', 'b', 'l', 'e', 'A'};
+    GS->name = (char*) malloc (NAME_LENGTH * sizeof(char));
+    GS->name = "DoubleA";
 
     state.error = 0;
     state.current_player = 0;
     state.n_player = 0;
+    state.fixed.number_of_pawns = 0;
 
     if (argc == 5 && !strcmp(argv[1], "phase=placement")) // four parameters, placement phase
     {
@@ -45,15 +38,17 @@ int main(int argc, char *argv[]) {
                     state.fixed.number_of_pawns = state.fixed.number_of_pawns * 10 + (c - '0');
             }
         }
-        
-        read_file(argv[3], GS);
-        if(state.error == 0){
-            //Placing amazons
 
+        read_file(argv[3], GS);
+        if (state.error == 1) {
+            return 2;
+        }
+        else{
+            //Placing amazons
             if(place_amazons(GS))
             {
-                system("cls");
                 save_data_file(argv[4], GS);
+                free_memory(GS);
                 return 0;
             }
             else
@@ -69,14 +64,25 @@ int main(int argc, char *argv[]) {
     {
         //inputfile_name = argv[2];
         //outputfile_name = argv[3];
-        
+
         read_file(argv[2], GS);
-        
-        if(state.error == 0){
-        
-            move_amazon(GS);
-        
-            save_data_file(argv[3], GS);
+
+        if (state.error == 1) {
+            return 2;
+        }
+        else {
+            if (move_amazon(GS))
+            {
+                save_data_file(argv[3], GS);
+                free_memory(GS);
+                return 0;
+            }
+            else
+            {
+                printf("All amazons are blocked\n");
+                free_memory(GS);
+                return 1;
+            }
         }
     }
 
@@ -84,35 +90,13 @@ int main(int argc, char *argv[]) {
     else if (argc == 2 && !strcmp(argv[1], "name"))
     {
         printf ("Name of the player: %s", GS->name);
+        free_memory(GS);
     }
-    
+
     else
     {
-        printf ("Not defined common line parameters\n");
+        printf ("Not defined command line parameters\n");   //czy 3 jako return?
+        return 3;
     }
 
-    //Beginning of the Game
-
-    Green_I_txt();
-    printf("      .o.                                                                            \n");
-    printf("     .888.                                                                           \n");
-    printf("    .8'888.     ooo. .oo. .oo.     .oooo.     oooooooo  .ooooo.  ooo..oo.     .oooo.o\n");
-    printf("   .8' `888.    `888P'Y88bP'Y88b  `P  )88b   d'''7d8P  d88' `88b `888P'Y88b  d88(  '8\n");
-    printf("  .88ooo8888.    888   888   888   .oP'888     .d8P'   888   888  888   888  `'Y88b. \n");
-    printf(" .8'     `888.   888   888   888  d8(  888   .d8P'  .P 888   888  888   888  o.  )88b\n");
-    printf("o88o     o8888o o888o o888o o888o `Y888''8o d8888888P  `Y8bod8P' o888o o888o 8''888P'\n\n");
-    White_txt();
-
-    int p = 0;
-    //Freeing the memory
-    while (p < state.fixed.height) {
-        free(*(state.board + p));
-        p++;
-    }
-    free(state.board);
-    free(GS->player_list);
-    free(GS->positions);
-    free(GS);
-
-    return 0;
 }
