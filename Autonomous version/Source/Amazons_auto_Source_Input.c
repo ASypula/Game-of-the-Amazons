@@ -204,20 +204,48 @@ void read_file(char* file_name, struct game_state* GS){
 int found_horse (game_state* GS, int *dx, int*dy, int x, int y) {
     int found = 0;
     int i, j;
-    for (i = x; (i < GS->fixed.height) && !found; i++)
+    if (x == 0)
+    {
+        for (i = 0; (i < GS->fixed.height) && !found; i++)
+        {
+            for (j = 0; (j < GS->fixed.width) && !found; j++)
+            {
+                if (GS->board[i][j].artifact == HORSE)
+                {
+                    *dx = i;
+                    *dy = j;
+                    found = 1;
+                }
+            }
+        }
+    }
+    else
     {
         for (j = y; (j < GS->fixed.width) && !found; j++)
-        {
-            if (GS->board[i][j].artifact == HORSE)
             {
-                *dx = i;
-                *dy = j;
-                found = 1;
+                if (GS->board[x][j].artifact == HORSE)
+                {
+                    *dx = x;
+                    *dy = j;
+                    found = 1;
+                }
+            }
+        for (i = x+1; (i < GS->fixed.height) && !found; i++)
+        {
+            for (j = 0; (j < GS->fixed.width) && !found; j++)
+            {
+                if (GS->board[i][j].artifact == HORSE)
+                {
+                    *dx = i;
+                    *dy = j;
+                    found = 1;
+                }
             }
         }
     }
     return found;
 }
+
 
 int max_point (game_state* GS, int *dx, int*dy, int x, int y, int search_max)
 {
@@ -300,12 +328,23 @@ int tile_available (game_state* GS, int x, int y, int *found_x, int *found_y)
 
 int best_place (game_state* GS, int *found_x, int *found_y)
 {
-    int x = 0;
-    int y = 0;
+    int x, y;
+    if (GS->already_placed_amazons == 0)
+    {
+        x = 0;
+        y = 0;
+    }
+    else
+    {
+        x = GS->positions[GS->already_placed_amazons - 1].x + 1;
+        y = GS->positions[GS->already_placed_amazons - 1].y + 1;
+    }
     int *dx;
     dx = (int*) malloc (sizeof(int));
     int *dy;
     dy = (int*) malloc (sizeof(int));
+    *dx = x;
+    *dy = y;
     int max_search = 5;  //maximum value of treasure
     int no_place = 1;
     while (no_place && found_horse(GS, dx, dy, x, y))
@@ -368,6 +407,7 @@ int best_place (game_state* GS, int *found_x, int *found_y)
         return 1;
 }
 
+
 int place_amazons(game_state *GS){
 
     int id = find_ID(GS);
@@ -398,5 +438,6 @@ int place_amazons(game_state *GS){
         return 0;
     }
 }
+
 
 
