@@ -4,7 +4,7 @@
 #include "Common.h"
 
 
-void place_amazons(game_state* GS);
+int place_amazons(game_state* GS);
 /**
 * places one amazon on the board
 * deletes artifacts and points from chosen tiles
