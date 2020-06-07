@@ -135,7 +135,13 @@ int cmp_coordinates(struct coordinate, struct coordinate);
 * returns 1 and 0 if they are not
 */
 
-
-
+void test(int, int, const char*);
+/**
+ * function perfroms test where checks if function gave expected result
+ * it gives respectfull answer when test is passed and failed
+ * @param int - expected - expected value
+ * @param int - actual - actual value given by function
+ * @param cont char* - testName - name of the test
+ */
 
 #endif // _Common_H
