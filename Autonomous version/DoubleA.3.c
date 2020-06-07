@@ -445,7 +445,7 @@ int point_in_board (game_state* GS, int x, int y)
 int tile_with_enemy (game_state* GS, int x, int y)
 {
     int id = find_ID(GS);
-    if (GS->board[x][y].occupation != id || GS->board[x][y].occupation != FREE || GS->board[x][y].occupation != MISSILE) // ID's of other players
+    if (GS->board[x][y].occupation != id && GS->board[x][y].occupation != FREE && GS->board[x][y].occupation != MISSILE) // ID's of other players
         return 1;
     else
         return 0;
@@ -1287,7 +1287,7 @@ void ac_system(struct game_state* GS, struct game_state* TEST) {
 
     int used_broken_arrow = ac_used_broken_arrows(GS, TEST);
 
-    //Sprawdzanie ruchu (jeśli nie były użyte konie)
+    //Sprawdzanie ruchu (jeœli nie by³y u¿yte konie)
 
     int i, j, k;
 
