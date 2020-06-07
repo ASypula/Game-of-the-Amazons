@@ -63,3 +63,13 @@ int cmp_coordinates(struct coordinate C1, struct coordinate C2){
     }
 }
 
+void test(int expected, int actual, const char* testName){
+
+    if(expected==actual){
+        printf("Test %s PASSED\n", testName);
+    }
+    else{
+        printf("Test %s FAILED expected: %d actual: %d\n", testName, expected, actual);
+    }
+
+}
