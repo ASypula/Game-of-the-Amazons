@@ -1,5 +1,20 @@
 ﻿#include "Movement.h"
 
+int point_in_board (game_state* GS, int x, int y)
+{
+    if ((x >= 0) && (y >=0) && (x < GS->fixed.height) && (y < GS->fixed.width))
+        return 1;
+    else
+        return 0;
+}
+
+int is_occupied(game_state* GS, int x, int y)
+{
+    if (GS->board[x][y].occupation != FREE)
+        return OCCUPIED;
+    else
+        return FREE;
+}
 
 void find_amazons (game_state* GS)
 {
@@ -20,6 +35,175 @@ void find_amazons (game_state* GS)
 	GS->already_placed_amazons = placed_pawns;
 }
 
+int check_orthogonal_path_for_x(game_state* GS, int x1, int x2, int y)
+{
+    int occupation = FREE;
+    if (x1 < x2)
+    {
+        x1++;
+        while ((x1 <= x2) && (occupation == FREE))
+        {
+            occupation = is_occupied(GS, x1, y);
+            x1++;
+        }
+        return occupation;
+    }
+    else
+    {
+        x1--;
+        while ((x1 >= x2) && (occupation == FREE))
+        {
+            occupation = is_occupied(GS, x1, y);
+            x1--;
+        }
+        return occupation;
+    }
+}
+
+int check_orthogonal_path_for_y(game_state* GS, int x, int y1, int y2)
+{
+    int occupation = FREE;
+    if (y1 < y2)
+    {
+        y1++;
+        while ((y1 <= y2) && (occupation == FREE))
+        {
+            occupation = is_occupied(GS, x, y1);
+            y1++;
+        }
+        return occupation;
+
+    }
+    else
+    {
+        y1--;
+        while ((y1 >= y2) && (occupation == FREE))
+        {
+            occupation = is_occupied(GS, x, y1);
+            y1--;
+        }
+        return occupation;
+    }
+}
+
+
+int check_diagonal_path(game_state* GS, int x1, int x2, int y1, int y2)
+{
+    int occupation = FREE;
+    if (x1 < x2 && y1 < y2)
+    {
+        x1++;
+        y1++;
+        while (x1 <= x2 && y1 <= y2 && (occupation == FREE))
+        {
+            occupation = is_occupied(GS, x1, y1);
+            x1++;
+            y1++;
+        }
+        x1--;
+        y1--;
+    }
+    else if (x1 < x2 && y1 > y2)
+    {
+        x1++;
+        y1--;
+        while (x1 <= x2 && y1 >= y2 && (occupation == FREE))
+        {
+            occupation = is_occupied(GS, x1, y1);
+            x1++;
+            y1--;
+        }
+        x1--;
+        y1++;
+    }
+    else if (x1 > x2 && y1 < y2)
+    {
+        x1--;
+        y1++;
+        while (x1 >= x2 && y1 <= y2 && (occupation == FREE))
+        {
+            occupation = is_occupied(GS, x1, y1);
+            x1--;
+            y1++;
+        }
+        x1++;
+        y1--;
+    }
+    else if (x1 > x2&& y1 > y2)
+    {
+        x1--;
+        y1--;
+        while (x1 >= x2 && y1 >= y2 && (occupation == FREE))
+        {
+            occupation = is_occupied(GS, x1, y1);
+            x1--;
+            y1--;
+        }
+        x1++;
+        y1++;
+    }
+    if ((x1 == x2) && (y1 == y2))
+        return occupation;
+    else /* the path is not a straight line */
+        return OCCUPIED;
+}
+
+
+int path_invalid(game_state* GS, int x1, int x2, int y1, int y2)
+{
+    int occupation = FREE;
+    if (x1 != x2)
+    {
+        if (y1 != y2)
+        {
+            occupation = check_diagonal_path(GS, x1, x2, y1, y2);
+        }
+        else
+            occupation = check_orthogonal_path_for_x(GS, x1, x2, y1);
+    }
+    else
+    {
+        if (y1 != y2)
+            occupation = check_orthogonal_path_for_y(GS, x1, y1, y2);
+        else /* x1 = x2, y1 = y2 */
+        {
+            occupation = OCCUPIED;
+        }
+    }
+    return occupation;
+}
+
+int path_to_horse (game_state* GS, int *dx, int *dy, int n_amazon)
+{
+    int no_horse = 1;
+    int x1 = GS->positions[n_amazon].x;
+    int y1 = GS->positions[n_amazon].y;
+    int x2 = 0;
+    int y2 = 0;
+    while (no_horse && point_in_board(GS, x2, y2) && found_horse(GS, dx, dy, x2, y2))
+    {
+        if (path_invalid(GS, x1, *dx, y1, *dy))
+        {
+            if (*dy == (GS->fixed.width - 1))
+            {
+                (*dx) ++;
+                *dy = -1;
+            }
+            x2 = *dx;
+            y2 = *dy + 1;
+        }
+        else
+        {
+            no_horse = 0;
+        }
+    }
+    if (no_horse == 0)
+        return 1;
+    else
+        return 0;
+}
+
+
 int choose_amazon(game_state* GS, int *x, int *y, int *n_amazon)
 {
     find_amazons(GS);
@@ -27,18 +211,27 @@ int choose_amazon(game_state* GS, int *x, int *y, int *n_amazon)
     int max_points = -1;
     int max_part;
     int *x1, *y1;
+    int is_horse = 0;
     x1 = (int*) malloc (sizeof(int));
     y1 = (int*) malloc (sizeof(int));
-    while (left_amazons >= 0)
+    while (left_amazons >= 0 && !is_horse)
     {
-        if (max_points < (max_part = max_points_tile (GS, x1, y1, left_amazons)))
+        if (path_to_horse(GS, x1, y1, left_amazons))
         {
-            max_points = max_part;
             *x = *x1;
             *y = *y1;
             *n_amazon = left_amazons;
+            max_points = 0;
+            is_horse = 1;
         }
-        left_amazons--;
+        else if (max_points < (max_part = max_points_tile (GS, x1, y1, left_amazons)))
+            {
+                max_points = max_part;
+                *x = *x1;
+                *y = *y1;
+                *n_amazon = left_amazons;
+            }
+        left_amazons = left_amazons - 1;
     }
     if (max_points == -1) //all amazons are blocked
         {
@@ -49,6 +242,36 @@ int choose_amazon(game_state* GS, int *x, int *y, int *n_amazon)
         return 1;
 }
 
+int choose_after_horse(game_state* GS, int *x, int *y, int n_amazon)
+{
+    int max_points = -1;
+    int max_part;
+    int *x1, *y1;
+    int is_horse = 0;
+    x1 = (int*) malloc (sizeof(int));
+    y1 = (int*) malloc (sizeof(int));
+    if (path_to_horse(GS, x1, y1, n_amazon))
+    {
+        *x = *x1;
+        *y = *y1;
+        max_points = 0;
+    }
+    else if (max_points < (max_part = max_points_tile (GS, x1, y1, n_amazon)))
+        {
+            max_points = max_part;
+            *x = *x1;
+            *y = *y1;
+        }
+    if (max_points == -1) //this amazon is blocked
+        {
+            printf ("The amazon is blocked.\n");
+            return 0;
+        }
+    else
+        return 1;
+}
+
+
 void get_treasure(game_state* GS, int x, int y)
 {
     if (GS->board[x][y].treasure != 0)
@@ -56,22 +279,6 @@ void get_treasure(game_state* GS, int x, int y)
         GS->player_list[find_ID(GS)-1].points += GS->board[x][y].treasure;
         GS->board[x][y].treasure = FREE;
     }
-}
-
-int point_in_board (game_state* GS, int x, int y)
-{
-    if ((x >= 0) && (y >=0) && (x < GS->fixed.height) && (y < GS->fixed.width))
-        return 1;
-    else
-        return 0;
-}
-
-int is_occupied(game_state* GS, int x, int y)
-{
-    if (GS->board[x][y].occupation != FREE)
-        return OCCUPIED;
-    else
-        return FREE;
 }
 
 int max_points_line (game_state* GS, int p, int q, int *dx, int *dy, int n_amazon)
@@ -83,7 +290,7 @@ int max_points_line (game_state* GS, int p, int q, int *dx, int *dy, int n_amazo
     y+=q;
     while ( point_in_board (GS, x, y) && !is_occupied(GS, x, y))
     {
-        if (GS->board[x][y].treasure > points)
+        if (GS->board[x][y].treasure >= points)
         {
             points = GS->board[x][y].treasure;
             *dx = x;
@@ -92,7 +299,7 @@ int max_points_line (game_state* GS, int p, int q, int *dx, int *dy, int n_amazo
         x+=p;
         y+=q;
     }
-    if  ((x - p) == GS->point_1.x)
+    if  ((x - p) == GS->positions[n_amazon].x && (y - q) == GS->positions[n_amazon].y)
         return -1;
     else
         return points;
@@ -150,57 +357,6 @@ int max_points_tile (game_state* GS, int *x, int *y, int n_amazon)
         return -1;
 }
 
-int tile_with_enemy (game_state* GS, int x, int y)
-{
-    int id = find_ID(GS);
-    if (GS->board[x][y].occupation != id || GS->board[x][y].occupation != FREE || GS->board[x][y].occupation != MISSILE) // ID's of other players
-        return 1;
-    else
-        return 0;
-}
-
-int line_with_enemy (game_state* GS, int p, int q, int *dx, int *dy, int n_amazon)
-{
-    int x = GS->positions[n_amazon].x;
-    int y = GS->positions[n_amazon].y;
-    x+=p;
-    y+=q;
-    while ( point_in_board (GS, x, y) && !is_occupied(GS, x, y))
-    {
-        x+=p;
-        y+=q;
-    }
-    if (tile_with_enemy(GS, x, y))
-    {
-        *dx = x;
-        *dy = y;
-        return 1;
-    }
-    else
-        return 0;
-}
-//to improve
-int tile_with_closest_enemy (game_state* GS, int *x, int *y, int n_amazon)
-{
-    if (line_with_enemy(GS, -1, 0, x, y, n_amazon)) //left line
-        return 1;
-    else if (line_with_enemy(GS, -1, -1, x, y, n_amazon)) //left-up line
-            return 1;
-    else if (line_with_enemy(GS, 0, -1, x, y, n_amazon)) //up line
-            return 1;
-    else if (line_with_enemy(GS, 1, -1, x, y, n_amazon)) //right-up line
-            return 1;
-    else if (line_with_enemy(GS, 1, 0, x, y, n_amazon)) //right line
-            return 1;
-    else if (line_with_enemy(GS, 1, 1, x, y, n_amazon)) //right-down line
-            return 1;
-    else if (line_with_enemy(GS, 0, 1, x, y, n_amazon)) //down line
-            return 1;
-    else if (line_with_enemy(GS, -1, 1, x, y, n_amazon)) //left-down line
-            return 1;
-    else
-        return 0;
-}
 
 int valid_path_for_arrow(game_state* GS, int p, int q, int *dx, int *dy, int n_amazon)
 {
@@ -213,7 +369,7 @@ int valid_path_for_arrow(game_state* GS, int p, int q, int *dx, int *dy, int n_a
         x+=p;
         y+=q;
     }
-    if (x == (GS->positions[n_amazon].x+p))
+    if (x == (GS->positions[n_amazon].x+p) && y == (GS->positions[n_amazon].y+q))
         return 0;
     else
     {
@@ -222,6 +378,7 @@ int valid_path_for_arrow(game_state* GS, int p, int q, int *dx, int *dy, int n_a
         return 1;
     }
 }
+
 
 int random_arrow (game_state* GS, int *x, int *y, int n_amazon)
 {
@@ -248,59 +405,63 @@ int random_arrow (game_state* GS, int *x, int *y, int n_amazon)
 //spear can go through a missile
 int random_spear (game_state* GS, int *x, int *y, int n_amazon)
 {
-    if (valid_path_for_arrow(GS, -1, 0, x, y, n_amazon))      //left
+    if (valid_path_for_arrow(GS, 0, -1, x, y, n_amazon))      //left
         return 1;
-    else if (valid_path_for_arrow(GS, 0, -1, x, y, n_amazon)) //up
+    else if (valid_path_for_arrow(GS, -1, -1, x, y, n_amazon))//left-up
         return 1;
-    else if (valid_path_for_arrow(GS, 1, 0, x, y, n_amazon))  //right
+    else if (valid_path_for_arrow(GS, -1, 0, x, y, n_amazon)) //up
         return 1;
-    else if (valid_path_for_arrow(GS, 0, 1, x, y, n_amazon))  //down
+    else if (valid_path_for_arrow(GS, -1, 1, x, y, n_amazon)) //right-up
+        return 1;
+    else if (valid_path_for_arrow(GS, 0, 1, x, y, n_amazon))  //right
+        return 1;
+    else if (valid_path_for_arrow(GS, 1, 1, x, y, n_amazon))  //right-down
+        return 1;
+    else if (valid_path_for_arrow(GS, 1, 0, x, y, n_amazon))  //down
+        return 1;
+    else if (valid_path_for_arrow(GS, 1, -1, x, y, n_amazon)) //left-down
         return 1;
     else
         return 0;
 }
 
 
-void shoot_arrow(game_state* GS, int *n_amazon)
+void shoot_arrow(game_state* GS, int n_amazon)
 {
-
     int *x;
     int *y;
     x = (int*) malloc (sizeof(int));
     y = (int*) malloc (sizeof(int));
-    /*if (tile_with_closest_enemy (GS, x, y, *n_amazon))
+    if (random_arrow(GS, x, y, n_amazon))
     {
         GS->board[*x][*y].occupation = MISSILE;
     }
     else
     {
-    */
-        if (random_arrow(GS, x, y, *n_amazon))
+        printf ("The amazon cannot shoot an arrow.\n");
+    }
+}
+
+void shoot_spear(game_state* GS, int n_amazon)
+{
+    int *x;
+    int *y;
+    x = (int*) malloc (sizeof(int));
+    y = (int*) malloc (sizeof(int));
+    if (tile_with_closest_enemy (GS, x, y, n_amazon))
+    {
+        GS->board[*x][*y].occupation = MISSILE;
+    }
+    else
+    {
+        if (random_arrow(GS, x, y, n_amazon))
         {
             GS->board[*x][*y].occupation = MISSILE;
         }
         else
             printf ("The amazon cannot shoot an arrow.\n");
-
-}
-
-void shoot_spear(game_state* GS, int *n_amazon)
-{
-    int *x;
-    int *y;
-    /*if (tile_with_closest_enemy (GS, x, y, n_amazon))
-    {
-        GS->board[*x][*y].occupation = MISSILE;
     }
-    else*/
-    if (random_arrow(GS, x, y, *n_amazon))
-    {
-        GS->board[*x][*y].occupation = MISSILE;
-    }
-    else
-        printf ("The amazon cannot shoot a spear.\n");
 }
-
 
 int move_amazon(game_state* GS)
 {
@@ -316,8 +477,53 @@ int move_amazon(game_state* GS)
         GS->positions[*n_amazon].x = *x;
         GS->positions[*n_amazon].y = *y;
         get_treasure(GS, *x, *y);
+        int art = GS->board[*x][*y].artifact;
+        GS->board[*x][*y].artifact = FREE;
 
-        switch (GS->board[*x][*y].artifact)
+        switch (art)
+        {
+            /* no artifact */
+            case 0:
+                shoot_arrow(GS, *n_amazon);
+                break;
+            /* horse*/
+            case 1:
+                shoot_arrow(GS, *n_amazon);
+                move_after_horse(GS, *n_amazon);
+                break;
+            /* broken arrow */
+            case 2:
+                break;
+            /* spear */
+            case 3:
+                shoot_arrow(GS, *n_amazon);
+                break;
+            default:
+                printf("Unknown artifact");
+                break;
+            }
+            return 1;
+    }
+    else
+        return 0;
+}
+
+int move_after_horse(game_state* GS, int n_amazon)
+{
+    int *x, *y;
+    x = (int*) malloc (sizeof(int));
+    y = (int*) malloc (sizeof(int));
+    if (choose_after_horse(GS, x, y, n_amazon))
+    {
+        GS->board[GS->positions[n_amazon].x][GS->positions[n_amazon].y].occupation = FREE;
+        GS->board[*x][*y].occupation = find_ID(GS);
+        GS->positions[n_amazon].x = *x;
+        GS->positions[n_amazon].y = *y;
+        get_treasure(GS, *x, *y);
+        int art = GS->board[*x][*y].artifact;
+        GS->board[*x][*y].artifact = FREE;
+
+        switch (art)
         {
             /* no artifact */
             case 0:
@@ -326,22 +532,24 @@ int move_amazon(game_state* GS)
             /* horse*/
             case 1:
                 shoot_arrow(GS, n_amazon);
-                move_amazon(GS);
+                move_after_horse(GS, n_amazon);
                 break;
             /* broken arrow */
             case 2:
                 break;
             /* spear */
             case 3:
-                shoot_spear(GS, n_amazon);
+                shoot_arrow(GS, n_amazon);
                 break;
             default:
                 printf("Unknown artifact");
                 break;
-        }
-        GS->board[*x][*y].artifact = FREE;
-        return 1;
+            }
+            return 1;
     }
     else
-        return 0;
+    {
+        printf("This amazon cannot make a move");
+        return 1;
+    }
 }
