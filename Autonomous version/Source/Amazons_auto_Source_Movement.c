@@ -448,18 +448,13 @@ void shoot_spear(game_state* GS, int n_amazon)
     int *y;
     x = (int*) malloc (sizeof(int));
     y = (int*) malloc (sizeof(int));
-    if (tile_with_closest_enemy (GS, x, y, n_amazon))
+    if (random_arrow(GS, x, y, n_amazon))
     {
         GS->board[*x][*y].occupation = MISSILE;
     }
     else
     {
-        if (random_arrow(GS, x, y, n_amazon))
-        {
-            GS->board[*x][*y].occupation = MISSILE;
-        }
-        else
-            printf ("The amazon cannot shoot an arrow.\n");
+        printf ("The amazon cannot shoot a spear.\n");
     }
 }
 
