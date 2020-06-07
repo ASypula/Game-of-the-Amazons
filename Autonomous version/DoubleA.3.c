@@ -316,17 +316,45 @@ void get_player_data_file(FILE* fp, struct game_state* GS) {
     }
 }
 
+void add_user_initation(struct game_state* GS){
+
+        int i;
+		int on_list = 0;
+
+		for(i=0; i<GS->fixed.number_of_players; i++){
+            if(!strcmp(GS->name, GS->player_list[i].name)){
+                on_list = 1;
+            }
+		}
+
+        i = 0;
+		if(!on_list){
+            while(GS->name[i]){
+                printf("%c", GS->name[i]);
+                GS->player_list[GS->fixed.number_of_players].name[i] = GS->name[i];
+                i++;
+            }
+            GS->player_list[GS->fixed.number_of_players].name[i] = 0;
+            //GS->player_list[GS->fixed.number_of_players].name = GS->name;
+            GS->player_list[GS->fixed.number_of_players].ID = (GS->fixed.number_of_players + 1);
+            GS->player_list[GS->fixed.number_of_players].points = 0;
+
+            GS->fixed.number_of_players++;
+		}
+}
+
 void read_file(char* file_name, struct game_state* GS){
 
-	// HEIGHT
-
-	FILE* fp = fopen(file_name, "r");
+	FILE* fp = fopen(file_name, "r+");
 
 	if (fp == NULL) {
 		printf("Error in opening file!");
 		GS->error = 1;
 	}
 	else {
+
+        // HEIGHT
+
 		GS->fixed.height = get_multi_digit_file(fp, GS);
 
 		// WIDTH
@@ -354,9 +382,14 @@ void read_file(char* file_name, struct game_state* GS){
 
 		get_player_data_file(fp, GS);
 
+		//Adding name if needed
+
+		add_user_initation(GS);
+
 		fclose(fp);
 	}
 }
+
 
 int is_occupied(game_state* GS, int x, int y)
 {
