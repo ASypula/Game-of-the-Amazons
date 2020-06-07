@@ -136,7 +136,7 @@ int max_points_tile (game_state* GS, int *x, int *y, int n_amazon);
 */
 
 
-int valid_path_for_arrow(game_state* GS, int *dx, int *dy, int p, int q, int n_amazon);
+int valid_path_for_arrow(game_state* GS, int p, int q, int *dx, int *dy, int n_amazon);
 /**
 * checks if a missile can be shot on the line
 * @param *GS - game_state
