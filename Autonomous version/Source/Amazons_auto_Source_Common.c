@@ -52,3 +52,14 @@ void free_memory (game_state* GS)
     free(GS->positions);
     free(GS);
 }
+
+int cmp_coordinates(struct coordinate C1, struct coordinate C2){
+
+    if((C1.x==C2.x)&&(C1.y==C2.y)){
+        return 1;
+    }
+    else{
+        return 0;
+    }
+}
+
