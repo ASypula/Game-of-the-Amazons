@@ -95,8 +95,7 @@ int main(int argc, char *argv[]) {
 
     else
     {
-        printf ("Not defined command line parameters\n");   //czy 3 jako return?
-        return 3;
+        printf ("Not defined command line parameters\n");
+        return 2;
     }
-
 }
