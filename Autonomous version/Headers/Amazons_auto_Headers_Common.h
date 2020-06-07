@@ -12,6 +12,8 @@
 #define HORSE 1
 #define BROKEN_ARROW 2
 #define SPEAR 3
+#define TRUE 1
+#define FALSE 0
 
 /**
 * A structure with date of a tile
@@ -124,5 +126,16 @@ void free_memory (game_state* GS);
 * function freeing all pointers from GS also including GS
 * @param *GS - game state
 */
+
+int cmp_coordinates(struct coordinate, struct coordinate);
+/**
+* function compares two given coordiantes
+* @param struct coodrinate - given to comparison coordiante
+* @return if coordinates are equal(coordinates x and y are euqal) function
+* returns 1 and 0 if they are not
+*/
+
+
+
 
 #endif // _Common_H
