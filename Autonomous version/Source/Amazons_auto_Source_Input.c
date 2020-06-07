@@ -36,46 +36,56 @@ int get_multi_digit_file(FILE* fp, game_state *GS) {
 
 tile get_tile_file(FILE* fp, struct game_state* GS, int i, int j) {
 
-	tile temp;
-	int c;
-	int buffer[10]; // 3 digit tile
-	int count = 0;
+    tile temp;
+    int c;
+    int buffer[10]; // 3 digit tile
+    int count = 0;
 
-	do {
-		c = getc(fp);
+    do {
+        c = getc(fp);
 
-		if (c != ' ' && c != '\n' && c != EOF) {
-			if (count >= 3) {
-				//Exception
-				printf("Error in reading tile[%d][%d], tile has more than 3 digits!\n", i, j);
-				GS->error = 1;
-			}
+        if (c != ' ' && c != '\n' && c != EOF) {
+            if (count >= 3) {
+                //Exception
+                printf("Error in reading tile[%d][%d], tile has more than 3 digits!\n", i, j);
+                GS->error = 1;
+            }
 
-			buffer[count++] = c;
-		}
-		else if (count > 0) {
+            buffer[count++] = c;
+        }
+        else if (count > 0) {
 
-			temp.treasure = number(buffer[0]);
-			if (temp.treasure > 5 || temp.treasure < 0) {
-				printf("Error in reading tile[%d][%d], wrong value of treasure tile!\n", i, j);
-				GS->error = 1;
-			}
-			temp.artifact = number(buffer[1]);
-			if (temp.artifact > 3 || temp.artifact < 0) {
-				printf("Error in reading tile[%d][%d], wrong value of artifact tile!\n", i, j);
-				GS->error = 1;
-			}
-			temp.occupation = number(buffer[2]);
-			if (temp.occupation > 9 || temp.occupation < 0) {
-				printf("Error in reading tile[%d][%d], wrong value of occupation tile!\n", i, j);
-				GS->error = 1;
-			}
+            temp.treasure = number(buffer[0]);
+            if (temp.treasure > 5 || temp.treasure < 0) {
+                printf("Error in reading tile[%d][%d], wrong value of treasure tile!\n", i, j);
+                GS->error = 1;
+            }
+            temp.artifact = number(buffer[1]);
+            if (temp.artifact > 3 || temp.artifact < 0) {
+                printf("Error in reading tile[%d][%d], wrong value of artifact tile!\n", i, j);
+                GS->error = 1;
+            }
+            temp.occupation = number(buffer[2]);
+            if (temp.occupation > 9 || temp.occupation < 0) {
+                printf("Error in reading tile[%d][%d], wrong value of occupation tile!\n", i, j);
+                GS->error = 1;
+            }
+            if ((temp.occupation > 0 && temp.occupation < 9)&& (temp.treasure != 0 || temp.artifact != 0)) {
+                printf("Occupied Tile[%d][%d], has: ", i, j);
+                if (temp.treasure != 0) {
+                    printf("treasure=%d ", temp.treasure);
+                }
+                if (temp.artifact != 0) {
+                    printf("artifact=%d ", temp.artifact);
+                }
+                printf("\n");
+                GS->error = 1;
+            }
+            count = 0;
+        }
+    } while (c != ' ' && c != '\n' && c != EOF);
 
-			count = 0;
-		}
-	} while (c != ' ' && c != '\n' && c!= EOF);
-
-	return temp;
+    return temp;
 }
 
 void get_board_file(FILE* fp, struct game_state* GS) {
@@ -90,86 +100,123 @@ void get_board_file(FILE* fp, struct game_state* GS) {
 
 void get_player_data_file(FILE* fp, struct game_state* GS) {
 
-	int c;
-	int count = 0;
-	int lines = 0;
-	int type = 0; // 0 - name, 1 - ID, 2 - points
-	char bufor[16];
+    int c;
+    int count = 0;
+    int lines = 0;
+    int type = 0; // 0 - name, 1 - ID, 2 - points
+    char bufor[16];
 
-	do {
+    do {
 
-		c = getc(fp);
+        c = getc(fp);
 
-			if (c != ' ' && c != '\n' && c!= EOF) {
+        if (c != ' ' && c != '\n' && c != EOF) {
 
-				if (type == 0 && count >= 15) {
-					printf("Error! Readed name has more that 15 chars!\n");
-					GS->error = 1;
-				}
+            if (type == 0 && count >= 15) {
+                printf("Error! Readed name has more that 15 chars!\n");
+                GS->error = 1;
+            }
 
-				if (type == 2 && count >= 15) {
-					printf("Error! Points number has more than 15 digits, unable to read!\n");
-					GS->error = 1;
-				}
+            if (type == 2 && count >= 15) {
+                printf("Error! Points number has more than 15 digits, unable to read!\n");
+                GS->error = 1;
+            }
 
-				if (type == 0) {
-					GS->player_list[lines].name[count++] = (char)c;
-				}
-				else if (type == 1 || type == 2) {
-					bufor[count++] = (char)c;
-					if (c < 48 || c > 57) {
-						printf("Error! Score of a player cointains a char!\n");
-						GS->error = 1;
-					}
-				}
+            if (type == 0) {
+                GS->player_list[lines].name[count++] = (char)c;
+            }
+            else if (type == 1 || type == 2) {
+                bufor[count++] = (char)c;
+                if (c < 48 || c > 57) {
+                    printf("Error! Score of a player cointains a char!\n");
+                    GS->error = 1;
+                }
+            }
 
-			}
-			else if (count > 0) {
+        }
+        else if (count > 0) {
 
-				if (type == 0) {
-					GS->player_list[lines].name[count] = 0; // Null at the end of a string
-					type = 1;
-				}
-				else if (type == 1) {
-					bufor[count] = 0;
-					GS->player_list[lines].ID = atoi(bufor);
-					if (GS->player_list[lines].ID < 0 || GS->player_list[lines].ID > 8) {
-						printf("Error! Wrong value of player ID!\n");
-						GS->error = 1;
-					}
-					type = 2;
-				}
-				else if (type == 2) {
-					bufor[count] = 0;
-					GS->player_list[lines].points = atoi(bufor);
-					if (GS->player_list[lines].points < 0) {
-						printf("Error! Negative value of player's points!\n");
-						GS->error = 1;
-					}
-					type = 0;
-					lines++;
-				}
+            if (type == 0) {
+                GS->player_list[lines].name[count] = 0; // Null at the end of a string
+                type = 1;
+            }
+            else if (type == 1) {
+                bufor[count] = 0;
+                GS->player_list[lines].ID = atoi(bufor);
+                if (GS->player_list[lines].ID < 0 || GS->player_list[lines].ID > 8) {
+                    printf("Error! Wrong value of player ID!\n");
+                    GS->error = 1;
+                }
+                type = 2;
+            }
+            else if (type == 2) {
+                bufor[count] = 0;
+                GS->player_list[lines].points = atoi(bufor);
+                if (GS->player_list[lines].ID < 0) {
+                    printf("Error! Negative value of player's points!\n");
+                    GS->error = 1;
+                }
+                type = 0;
+                lines++;
+            }
 
-				count = 0;
-			}
+            count = 0;
+        }
 
-	} while (c != EOF);
+    } while (c != EOF);
 
-	GS->fixed.number_of_players = lines;
+    GS->fixed.number_of_players = lines;
+
+    int i, j;
+    for (i = 0; i < GS->fixed.height; i++) {
+        for (j = 0; j < GS->fixed.width; j++) {
+            if (GS->board[i][j].occupation > GS->fixed.number_of_players && GS->board[i][j].occupation != MISSILE) {
+                printf("Boards contains a pawn of undeclared player! ID:%d, Tile:[%d][%d]\n", GS->board[i][j].occupation, i, j);
+                GS->error = 1;
+            }
+        }
+    }
 }
 
+void add_user_initation(struct game_state* GS){
+
+        int i;
+		int on_list = 0;
+
+		for(i=0; i<GS->fixed.number_of_players; i++){
+            if(!strcmp(GS->name, GS->player_list[i].name)){
+                on_list = 1;
+            }
+		}
+
+        i = 0;
+		if(!on_list){
+            while(GS->name[i]){
+                printf("%c", GS->name[i]);
+                GS->player_list[GS->fixed.number_of_players].name[i] = GS->name[i];
+                i++;
+            }
+            GS->player_list[GS->fixed.number_of_players].name[i] = 0;
+            //GS->player_list[GS->fixed.number_of_players].name = GS->name;
+            GS->player_list[GS->fixed.number_of_players].ID = (GS->fixed.number_of_players + 1);
+            GS->player_list[GS->fixed.number_of_players].points = 0;
+
+            GS->fixed.number_of_players++;
+		}
+}
 
 void read_file(char* file_name, struct game_state* GS){
 
-	// HEIGHT
-
-	FILE* fp = fopen(file_name, "r");
+	FILE* fp = fopen(file_name, "r+");
 
 	if (fp == NULL) {
 		printf("Error in opening file!");
 		GS->error = 1;
 	}
 	else {
+
+        // HEIGHT
+
 		GS->fixed.height = get_multi_digit_file(fp, GS);
 
 		// WIDTH
@@ -196,6 +243,10 @@ void read_file(char* file_name, struct game_state* GS){
 		// PLAYER DATA
 
 		get_player_data_file(fp, GS);
+
+		//Adding name if needed
+
+		add_user_initation(GS);
 
 		fclose(fp);
 	}
