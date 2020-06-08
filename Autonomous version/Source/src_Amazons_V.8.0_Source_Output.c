@@ -344,9 +344,9 @@ void ac_system(struct game_state* GS, struct game_state* TEST) {
 
             //pawn positions (Arrays)
             coordinate* position_now;
-            position_now = (coordinate*)malloc(sizeof(coordinate) * GS->fixed.number_of_pawns);
+            position_now = (coordinate*)malloc(sizeof(coordinate) * 20;
             coordinate* position_AC;
-            position_AC = (coordinate*)malloc(sizeof(coordinate) * GS->fixed.number_of_pawns);
+            position_AC = (coordinate*)malloc(sizeof(coordinate) * 20);
 
             int count = ac_pawn_positions(GS, TEST, position_now, position_AC, i);
 
