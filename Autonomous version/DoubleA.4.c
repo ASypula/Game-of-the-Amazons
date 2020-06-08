@@ -1339,7 +1339,6 @@ int main(int argc, char* argv[]) {
         //outputfile_name = argv[3];
 
         read_file(argv[2], GS);
-        read_file("AC.txt", TEST);
 
         if (state.error == 1) {
             return 2;
