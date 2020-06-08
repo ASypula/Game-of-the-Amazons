@@ -1677,12 +1677,14 @@ int main(int argc, char* argv[]) {
             return 2;
         }
         else {
+            
+            //AC SYSTEM
+            if (!TEST->error) {
+                ac_system(GS, TEST);
+            }
+            
             if (move_amazon(GS))
             {
-                //AC SYSTEM
-                if (!TEST->error) {
-                    ac_system(GS, TEST);
-                }
                 save_data_file(argv[3], GS);
                 free_memory(GS);
                 free_memory(TEST);
