@@ -163,9 +163,9 @@ int ac_pawn_positions(struct game_state* GS, struct game_state* TEST, struct coo
     //Sprawdzanie lokalizacji poprzednich pionów
     for (j = 0; j < TEST->fixed.height; j++) {
         for (k = 0; k < TEST->fixed.width; k++) {
-            if ((i + 1) == TEST->board[k][j].occupation) {
-                position_AC[count].x = k;
-                position_AC[count++].y = j;
+            if ((i + 1) == TEST->board[j][k].occupation) {
+                position_AC[count].x = j;
+                position_AC[count++].y = k;
             }
         }
     }
@@ -174,9 +174,9 @@ int ac_pawn_positions(struct game_state* GS, struct game_state* TEST, struct coo
     //Sprawdzanie lokalizacji obecnych pionów
     for (j = 0; j < GS->fixed.height; j++) {
         for (k = 0; k < GS->fixed.width; k++) {
-            if ((i + 1) == GS->board[k][j].occupation) {
-                position_now[count].x = k;
-                position_now[count++].y = j;
+            if ((i + 1) == GS->board[j][k].occupation) {
+                position_now[count].x = j;
+                position_now[count++].y = k;
             }
         }
     }
