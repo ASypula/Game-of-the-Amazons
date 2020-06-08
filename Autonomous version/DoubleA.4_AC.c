@@ -1315,7 +1315,7 @@ void ac_points_check(struct game_state* GS, struct game_state* TEST, int used_ho
     int i;
 
     for (i = 0; i < GS->fixed.number_of_players; i++) {
-        difference = TEST->player_list[i].points - GS->player_list[i].points;
+        difference =  GS->player_list[i].points - TEST->player_list[i].points;
 
         if (difference < 0) {
             printf("Player %s lost points this turn!", GS->player_list[i].name);
