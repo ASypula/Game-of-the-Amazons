@@ -2,7 +2,10 @@
 #define _Output_H
 
 #include <stdio.h>
+#include "Movement.h"
+#include "Input.h"
 #include "Common.h"
+#include "Output.h"
 
 
 void add_player_data_file(FILE* fp, struct game_state* GS);
