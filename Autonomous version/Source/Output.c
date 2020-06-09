@@ -1,7 +1,7 @@
 #include "Output.h"
 #include <stdlib.h>
 
-void add_player_data_file(FILE* fp, struct game_state* GS) {
+void add_player_data_file(FILE* fp, game_state* GS) {
     int i;
 
     for (i = 0; i < GS->fixed.number_of_players; i++) {
@@ -345,7 +345,7 @@ void ac_system(struct game_state* GS, struct game_state* TEST) {
 
             //pawn positions (Arrays)
             coordinate* position_now;
-            position_now = (coordinate*)malloc(sizeof(coordinate) * 20;
+            position_now = (coordinate*)malloc(sizeof(coordinate) * 20);
             coordinate* position_AC;
             position_AC = (coordinate*)malloc(sizeof(coordinate) * 20);
 
