@@ -198,7 +198,6 @@ void add_user_initation(struct game_state* GS){
         i = 0;
 		if(!on_list){
             while(GS->name[i]){
-                printf("%c", GS->name[i]);
                 GS->player_list[GS->fixed.number_of_players].name[i] = GS->name[i];
                 i++;
             }
