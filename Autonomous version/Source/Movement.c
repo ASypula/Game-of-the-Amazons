@@ -1,4 +1,8 @@
-﻿#include "Movement.h"
+#include "Movement.h"
+#include "Input.h"
+#include <stdlib.h>
+#include <stdio.h>
+
 
 int point_in_board (game_state* GS, int x, int y)
 {
