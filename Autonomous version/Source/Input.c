@@ -3,6 +3,8 @@
 #include <string.h>
 #include "Movement.h"
 #include "Input.h"
+#include "Common.h"
+#include "Output.h"
 
 int get_multi_digit_file(FILE* fp, game_state *GS) {
 
