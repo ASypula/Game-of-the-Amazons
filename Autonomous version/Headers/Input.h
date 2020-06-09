@@ -2,6 +2,7 @@
 #define _Input_H
 
 #include "Common.h"
+#include <stdio.h>
 
 
 int place_amazons(game_state* GS);
