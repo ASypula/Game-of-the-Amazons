@@ -1076,51 +1076,6 @@ void shoot_spear(game_state* GS, int n_amazon)
     }
 }
 
-int move_amazon(game_state* GS)
-{
-    int* x, * y;
-    int* n_amazon;
-    x = (int*)malloc(sizeof(int));
-    y = (int*)malloc(sizeof(int));
-    n_amazon = (int*)malloc(sizeof(int));
-    if (choose_amazon(GS, x, y, n_amazon))
-    {
-        GS->board[GS->positions[*n_amazon].x][GS->positions[*n_amazon].y].occupation = FREE;
-        GS->board[*x][*y].occupation = find_ID(GS);
-        GS->positions[*n_amazon].x = *x;
-        GS->positions[*n_amazon].y = *y;
-        get_treasure(GS, *x, *y);
-        int art = GS->board[*x][*y].artifact;
-        GS->board[*x][*y].artifact = FREE;
-
-        switch (art)
-        {
-            /* no artifact */
-        case 0:
-            shoot_arrow(GS, *n_amazon);
-            break;
-            /* horse*/
-        case 1:
-            shoot_arrow(GS, *n_amazon);
-            move_after_horse(GS, *n_amazon);
-            break;
-            /* broken arrow */
-        case 2:
-            break;
-            /* spear */
-        case 3:
-            shoot_arrow(GS, *n_amazon);
-            break;
-        default:
-            printf("Unknown artifact");
-            break;
-        }
-        return 1;
-    }
-    else
-        return 0;
-}
-
 int move_after_horse(game_state* GS, int n_amazon)
 {
     int* x, * y;
@@ -1166,6 +1121,53 @@ int move_after_horse(game_state* GS, int n_amazon)
         return 1;
     }
 }
+
+
+int move_amazon(game_state* GS)
+{
+    int* x, * y;
+    int* n_amazon;
+    x = (int*)malloc(sizeof(int));
+    y = (int*)malloc(sizeof(int));
+    n_amazon = (int*)malloc(sizeof(int));
+    if (choose_amazon(GS, x, y, n_amazon))
+    {
+        GS->board[GS->positions[*n_amazon].x][GS->positions[*n_amazon].y].occupation = FREE;
+        GS->board[*x][*y].occupation = find_ID(GS);
+        GS->positions[*n_amazon].x = *x;
+        GS->positions[*n_amazon].y = *y;
+        get_treasure(GS, *x, *y);
+        int art = GS->board[*x][*y].artifact;
+        GS->board[*x][*y].artifact = FREE;
+
+        switch (art)
+        {
+            /* no artifact */
+        case 0:
+            shoot_arrow(GS, *n_amazon);
+            break;
+            /* horse*/
+        case 1:
+            shoot_arrow(GS, *n_amazon);
+            move_after_horse(GS, *n_amazon);
+            break;
+            /* broken arrow */
+        case 2:
+            break;
+            /* spear */
+        case 3:
+            shoot_arrow(GS, *n_amazon);
+            break;
+        default:
+            printf("Unknown artifact");
+            break;
+        }
+        return 1;
+    }
+    else
+        return 0;
+}
+
 
 void add_player_data_file(FILE* fp, struct game_state* GS) {
     int i;
@@ -1320,7 +1322,6 @@ int main(int argc, char* argv[]) {
             if (place_amazons(GS))
             {
                 save_data_file(argv[4], GS);
-                free_memory(GS);
                 return 0;
             }
             else
@@ -1346,13 +1347,11 @@ int main(int argc, char* argv[]) {
             if (move_amazon(GS))
             {
                 save_data_file(argv[3], GS);
-                free_memory(GS);
                 return 0;
             }
             else
             {
                 printf("All amazons are blocked\n");
-                free_memory(GS);
                 return 1;
             }
         }
@@ -1362,7 +1361,6 @@ int main(int argc, char* argv[]) {
     else if (argc == 2 && !strcmp(argv[1], "name"))
     {
         printf("Name of the player: %s", GS->name);
-        free_memory(GS);
     }
 
     else
