@@ -1,4 +1,5 @@
-﻿#include "Output.h"
+#include "Output.h"
+#include <stdlib.h>
 
 void add_player_data_file(FILE* fp, struct game_state* GS) {
     int i;
