@@ -116,7 +116,7 @@ int main(int argc, char* argv[]) {
     // one parameter, displaying the name
     else if (argc == 2 && !strcmp(argv[1], "name"))
     {
-        printf("Name of the player: %s", GS->name);
+        printf("%s\n", GS->name);
     }
 
     else
