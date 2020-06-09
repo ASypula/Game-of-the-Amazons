@@ -1,4 +1,8 @@
-﻿#include "Input.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include "Movement.h"
+#include "Input.h"
 
 int get_multi_digit_file(FILE* fp, game_state *GS) {
 
