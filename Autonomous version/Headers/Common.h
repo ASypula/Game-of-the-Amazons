@@ -14,6 +14,10 @@
 #define SPEAR 3
 #define TRUE 1
 #define FALSE 0
+#include "Movement.h"
+#include "Input.h"
+#include "Common.h"
+#include "Output.h"
 
 /**
 * A structure with date of a tile
