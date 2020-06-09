@@ -1,7 +1,10 @@
 #ifndef _Input_H
 #define _Input_H
 
+#include "Movement.h"
+#include "Input.h"
 #include "Common.h"
+#include "Output.h"
 #include <stdio.h>
 
 
