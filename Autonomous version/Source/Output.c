@@ -67,7 +67,7 @@ int ac_used_horses(struct game_state* GS, struct game_state* TEST) {
 
     for (i = 0; i < GS->fixed.height; i++) {
         for (j = 0; j < GS->fixed.width; j++) {
-            if (GS->board[i][j].artifact == HORSE) {
+            if (GS->board[i][j].artifact == HORSE && GS->board[i][j].occupation != MISSILE) {
                 count_horse_now++;
             }
         }
@@ -75,7 +75,7 @@ int ac_used_horses(struct game_state* GS, struct game_state* TEST) {
 
     for (i = 0; i < TEST->fixed.height; i++) {
         for (j = 0; j < TEST->fixed.width; j++) {
-            if (TEST->board[i][j].artifact == HORSE) {
+            if (TEST->board[i][j].artifact == HORSE && TEST->board[i][j].occupation != MISSILE) {
                 count_horse_AC++;
             }
         }
@@ -92,21 +92,22 @@ int ac_used_broken_arrows(struct game_state* GS, struct game_state* TEST) {
 
     for (i = 0; i < GS->fixed.height; i++) {
         for (j = 0; j < GS->fixed.width; j++) {
-            if (GS->board[i][j].artifact == BROKEN_ARROW) {
+            if (GS->board[i][j].artifact == BROKEN_ARROW && GS->board[i][j].occupation != MISSILE) {
                 count_broken_arrow_now++;
             }
         }
     }
 
-    for (i = 0; i < TEST->fixed.height; i++) {
-        for (j = 0; j < TEST->fixed.width; j++) {
-            if (TEST->board[i][j].artifact == BROKEN_ARROW) {
+    for(i = 0; i < TEST->fixed.height; i++){
+        for(j = 0; j < TEST->fixed.width ; j++){
+            if(TEST->board[i][j].artifact == BROKEN_ARROW && TEST->board[i][j].occupation != MISSILE){
                 count_broken_arrow_AC++;
             }
         }
     }
 
-    return count_broken_arrow_AC - count_broken_arrow_now;
+    printf("now %d then %d", count_broken_arrow_now, count_broken_arrow_AC);
+    return  count_broken_arrow_AC - count_broken_arrow_now;
 }
 
 void ac_points_check(struct game_state* GS, struct game_state* TEST, int used_horse) {
@@ -119,10 +120,10 @@ void ac_points_check(struct game_state* GS, struct game_state* TEST, int used_ho
         difference = GS->player_list[i].points - TEST->player_list[i].points;
 
         if (difference < 0) {
-            printf("Player %s lost points this turn!", GS->player_list[i].name);
+            printf("Player %s lost points this turn!\n", GS->player_list[i].name);
         }
         else if (difference > max_points_turn) {
-            printf("Players %s achieved this turn more points than it is possible!", GS->player_list[i].name);
+            printf("Player %s achieved this turn more points than it is possible!\n", GS->player_list[i].name);
         }
     }
 
@@ -155,7 +156,7 @@ void ac_arrow_check(struct game_state* GS, struct game_state* TEST, int used_hor
     int possible_shots = GS->fixed.number_of_players + used_horse - used_broken_arrow;
 
     if (shoot_arrows != possible_shots) {
-        printf("Warning! In the last turn, players shoot %d missiles when it should be %d missiles", shoot_arrows, possible_shots);
+        printf("Warning! During last turn worng number of shots were made!\n");
     }
 }
 
@@ -188,21 +189,21 @@ int ac_pawn_positions(struct game_state* GS, struct game_state* TEST, struct coo
     return count;
 }
 
-int ac_horizontal_move(struct game_state* GS, struct coordinate* position_now, struct coordinate* position_AC, int j) {
+int ac_horizontal_move(struct game_state* GS, struct coordinate* position_now, struct coordinate* position_AC, int j, int l) {
 
     int possible = 0;
     int k;
 
     //UP
     for (k = position_AC[j].x; k > 0; k--) {
-        if (k == position_now[j].x && position_AC[j].y == position_now[j].y) {
+        if (k == position_now[l].x && position_AC[j].y == position_now[l].y) {
             possible = 1;
         }
     }
 
     //Down
     for (k = position_AC[j].x; k < GS->fixed.height; k++) {
-        if (k == position_now[j].x && position_AC[j].y == position_now[j].y) {
+        if (k == position_now[l].x && position_AC[j].y == position_now[l].y) {
             possible = 1;
         }
     }
@@ -210,21 +211,21 @@ int ac_horizontal_move(struct game_state* GS, struct coordinate* position_now, s
     return possible;
 }
 
-int ac_vertical_move(struct game_state* GS, struct coordinate* position_now, struct coordinate* position_AC, int j) {
+int ac_vertical_move(struct game_state* GS, struct coordinate* position_now, struct coordinate* position_AC, int j, int l) {
 
     int possible = 0;
     int k;
 
     //Left
     for (k = position_AC[j].y; k > 0; k--) {
-        if (position_AC[j].x == position_now[j].x && k == position_now[j].y) {
+        if (position_AC[j].x == position_now[l].x && k == position_now[l].y) {
             possible = 1;
         }
     }
 
     //Right
     for (k = position_AC[j].y; k < GS->fixed.height; k++) {
-        if (position_AC[j].x == position_now[j].x && k == position_now[j].y) {
+        if (position_AC[j].x == position_now[l].x && k == position_now[l].y) {
             possible = 1;
         }
     }
@@ -232,7 +233,7 @@ int ac_vertical_move(struct game_state* GS, struct coordinate* position_now, str
     return possible;
 }
 
-int ac_diagonal_move(struct game_state* GS, struct coordinate* position_now, struct coordinate* position_AC, int j) {
+int ac_diagonal_move(struct game_state* GS, struct coordinate* position_now, struct coordinate* position_AC, int j, int m) {
 
     int possible = 0;
     int k, l;
@@ -242,7 +243,7 @@ int ac_diagonal_move(struct game_state* GS, struct coordinate* position_now, str
     k = position_AC[j].x;
     l = position_AC[j].y;
     while ((k > 0) || (l < GS->fixed.width)) {
-        if (k == position_now[j].x && l == position_now[j].y) {
+        if (k == position_now[m].x && l == position_now[m].y) {
             possible = 1;
         }
 
@@ -255,7 +256,7 @@ int ac_diagonal_move(struct game_state* GS, struct coordinate* position_now, str
     k = position_AC[j].x;
     l = position_AC[j].y;
     while ((k > 0) || (l > 0)) {
-        if (k == position_now[j].x && l == position_now[j].y) {
+        if (k == position_now[m].x && l == position_now[m].y) {
             possible = 1;
         }
 
@@ -268,7 +269,7 @@ int ac_diagonal_move(struct game_state* GS, struct coordinate* position_now, str
     k = position_AC[j].x;
     l = position_AC[j].y;
     while ((k < GS->fixed.height) || (l < GS->fixed.width)) {
-        if (k == position_now[j].x && l == position_now[j].y) {
+        if (k == position_now[m].x && l == position_now[m].y) {
             possible = 1;
         }
 
@@ -281,7 +282,7 @@ int ac_diagonal_move(struct game_state* GS, struct coordinate* position_now, str
     k = position_AC[j].x;
     l = position_AC[j].y;
     while ((k < GS->fixed.height) || (l > 0)) {
-        if (k == position_now[j].x && l == position_now[j].y) {
+        if (k == position_now[m].x && l == position_now[m].y) {
             possible = 1;
         }
 
@@ -293,52 +294,56 @@ int ac_diagonal_move(struct game_state* GS, struct coordinate* position_now, str
 
 }
 
-void ac_check_move(struct game_state* GS, struct game_state* TEST, struct coordinate* position_now, struct coordinate* position_AC, int i, int count){
+void ac_check_move(struct game_state* GS, struct game_state* TEST, struct coordinate* position_now, struct coordinate* position_AC, int i, int count) {
 
-            int possible = 0;
+    int possible = 0;
 
-            int j, k, l;
+    int j, k;
 
-            for(j=0; j<count; j++){
-                if(!cmp_coordinates(position_AC[j], position_now[j])){
+    for (j = 0; j < count; j++) {
+            for( k = 0; k< count; k++){
 
-                    //Horizontally
+                //Horizontally
 
-                    if(ac_horizontal_move(GS, position_now, position_AC, j)){
-                        possible = 1;
-                    }
-
-                    //Vertically
-
-                    if(ac_vertical_move(GS, position_now, position_AC, j)){
-                        possible = 1;
-                    }
-
-                    //Diagonally
-
-                    if(ac_diagonal_move(GS, position_now, position_AC, j)){
-                        possible = 1;
-                    }
-
-                    if(!possible){
-                        printf("Player %s made impossible move with his amazon!\n", GS->player_list[i].name);
-                    }
+                if (ac_horizontal_move(GS, position_now, position_AC, j, k)) {
+                    possible = 1;
                 }
+
+                //Vertically
+
+                if (ac_vertical_move(GS, position_now, position_AC, j, k)) {
+                    possible = 1;
+                }
+
+                //Diagonally
+
+                if (ac_diagonal_move(GS, position_now, position_AC, j, k)) {
+                    possible = 1;
+                }
+
             }
-            count = 0;
-        }
+
+            if (!possible) {
+                printf("Player %s made impossible move with his amazon!\n", GS->player_list[i].name);
+                }
+            possible = 0;
+                    }
+    count = 0;
+}
 
 void ac_system(struct game_state* GS, struct game_state* TEST) {
 
     //Horse difference
 
     int used_horse = ac_used_horses(GS, TEST);
+    printf("Used horses: %d\n", used_horse);
 
     //Broken arrow difference
 
     int used_broken_arrow = ac_used_broken_arrows(GS, TEST);
+    printf("Used broken arrows: %d\n", used_broken_arrow);
 
-    //Sprawdzanie ruchu (jeśli nie były użyte konie)
+    //Sprawdzanie ruchu (jeœli nie by³y u¿yte konie)
 
     int i, j, k;
 
@@ -348,7 +353,7 @@ void ac_system(struct game_state* GS, struct game_state* TEST) {
 
             //pawn positions (Arrays)
             coordinate* position_now;
-            position_now = (coordinate*)malloc(sizeof(coordinate) * 20);
+            position_now = (coordinate*)malloc(sizeof(coordinate) *20);
             coordinate* position_AC;
             position_AC = (coordinate*)malloc(sizeof(coordinate) * 20);
 
