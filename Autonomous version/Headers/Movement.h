@@ -1,7 +1,10 @@
 #ifndef _Movement_H
 #define _Movement_H
 
+#include "Movement.h"
+#include "Input.h"
 #include "Common.h"
+#include "Output.h"
 
 int point_in_board (game_state* GS, int x, int y);
 /**
