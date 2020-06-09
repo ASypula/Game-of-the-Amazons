@@ -1,4 +1,7 @@
 #include "Output.h"
+#include "Movement.h"
+#include "Input.h"
+#include "Common.h"
 #include <stdlib.h>
 
 void add_player_data_file(FILE* fp, game_state* GS) {
