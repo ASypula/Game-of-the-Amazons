@@ -38,8 +38,6 @@ int main(int argc, char* argv[]) {
     test(TRUE, fmax_of8(-12, 0, 3, 4, 5, 87, 256, 19) == 256, "Find_max_of_eight");
     test(FALSE, is_occupied(UT, 2, 2), "Check_if_occupied");
 
-    free_memory(UT);
-
 #endif // RUN_UNIT_TEST
 
     //Game state
