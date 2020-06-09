@@ -1,4 +1,7 @@
 #include "Common.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
 int is_digit (char c)
 {
