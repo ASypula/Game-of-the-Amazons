@@ -1,5 +1,7 @@
 #include "Movement.h"
 #include "Input.h"
+#include "Common.h"
+#include "Output.h"
 #include <stdlib.h>
 #include <stdio.h>
 
