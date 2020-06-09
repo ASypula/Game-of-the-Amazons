@@ -1,6 +1,7 @@
 #ifndef _Output_H
 #define _Output_H
 
+#include <stdio.h>
 #include "Common.h"
 
 
@@ -39,7 +40,7 @@ int ac_used_horses(struct game_state* GS, struct game_state* TEST);
 * @param struct game_state* - TEST - game_state from the previous turn
 */
 
-int ac_used_broken_arrows(struct game_state* GS, struct game_state* TEST)
+int ac_used_broken_arrows(struct game_state* GS, struct game_state* TEST);
 /**
 * Function counts how many broken arrows artifacts were used in this turn
 * @param struct game_state* - GS - actual_game_state
