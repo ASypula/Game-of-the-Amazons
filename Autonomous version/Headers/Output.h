@@ -77,7 +77,7 @@ int ac_pawn_positions(struct game_state* GS, struct game_state* TEST, struct coo
 * @param int - i - current player [ID + 1]
 */
 
-int ac_horizontal_move(struct game_state* GS, struct coordinate* position_now, struct coordinate* position_AC, int j);
+int ac_horizontal_move(struct game_state* GS, struct coordinate* position_now, struct coordinate* position_AC, int j, int l);
 /**
 * Function checks if move was possible horizontally
 * @param struct game_state* - GS - actual_game_state
@@ -85,9 +85,10 @@ int ac_horizontal_move(struct game_state* GS, struct coordinate* position_now, s
 * @param struct coordinate* - position_now - positions from actual game state
 * @param struct coodrinate* - position_AC - position from last turn
 * @param int - j - current pawn
+* @param int - l - current checked position
 */
 
-int ac_vertical_move(struct game_state* GS, struct coordinate* position_now, struct coordinate* position_AC, int j);
+int ac_vertical_move(struct game_state* GS, struct coordinate* position_now, struct coordinate* position_AC, int j, int l);
 /**
 * Function checks if move was possible vertically
 * @param struct game_state* - GS - actual_game_state
@@ -95,9 +96,10 @@ int ac_vertical_move(struct game_state* GS, struct coordinate* position_now, str
 * @param struct coordinate* - position_now - positions from actual game state
 * @param struct coodrinate* - position_AC - position from last turn
 * @param int - j - current pawn
+* @param int - l - current checked position
 */
 
-int ac_diagonal_move(struct game_state* GS, struct coordinate* position_now, struct coordinate* position_AC, int j);
+int ac_diagonal_move(struct game_state* GS, struct coordinate* position_now, struct coordinate* position_AC, int j, int k);
 /**
 * Function checks if move was possible diagonally
 * @param struct game_state* - GS - actual_game_state
@@ -105,6 +107,7 @@ int ac_diagonal_move(struct game_state* GS, struct coordinate* position_now, str
 * @param struct coordinate* - position_now - positions from actual game state
 * @param struct coodrinate* - position_AC - position from last turn
 * @param int - j - current pawn
+* @param int - k - current checked position
 */
 
 void ac_check_move(struct game_state* GS, struct game_state* TEST, struct coordinate* position_now, struct coordinate* position_AC, int i, int count);
