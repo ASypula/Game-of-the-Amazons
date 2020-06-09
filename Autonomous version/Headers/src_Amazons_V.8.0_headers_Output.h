@@ -32,21 +32,21 @@ void save_data_file(char* file_name, struct game_state* GS);
 * @param *GS - game_state
 */
 
-int ac_used_horses(struct game_state*, struct game_state*);
+int ac_used_horses(struct game_state* GS, struct game_state* TEST);
 /**
 * Function counts how many horses artifact were used in this turn
 * @param struct game_state* - GS - actual_game_state
 * @param struct game_state* - TEST - game_state from the previous turn
 */
 
-int ac_used_broken_arrows(struct game_state*, struct game_state*)
+int ac_used_broken_arrows(struct game_state* GS, struct game_state* TEST)
 /**
 * Function counts how many broken arrows artifacts were used in this turn
 * @param struct game_state* - GS - actual_game_state
 * @param struct game_state* - TEST - game_state from the previous turn
 */
 
-void ac_points_check(struct game_state*, struct game_state*, int);
+void ac_points_check(struct game_state* GS, struct game_state* TEST, int used_horse);
 /**
 * Function checks if any of player cheated scores
 * @param struct game_state* - GS - actual_game_state
@@ -54,7 +54,7 @@ void ac_points_check(struct game_state*, struct game_state*, int);
 * @aparam int - used_horse - used horses in this turn
 */
 
-void ac_arrow_check(struct game_state*, struct game_state*, int, int);
+void ac_arrow_check(struct game_state* GS, struct game_state* TEST, int used_horse, int used_broken_arrow);
 /**
 * Function checks if there is correct amount of arrows on the board
 * @param struct game_state* - GS - actual_game_state
@@ -63,7 +63,7 @@ void ac_arrow_check(struct game_state*, struct game_state*, int, int);
 * @param int - used_broken_arrow - used broken arrows in this turn
 */
 
-int ac_pawn_positions(struct game_state*, struct game_state*, struct coordinate* position_now, struct coordinate* position_AC, int i);
+int ac_pawn_positions(struct game_state* GS, struct game_state* TEST, struct coordinate* position_now, struct coordinate* position_AC, int i);
 /**
 * Function saves positions of defined player pawns
 * @param struct game_state* - GS - actual_game_state
@@ -114,7 +114,7 @@ void ac_check_move(struct game_state* GS, struct game_state* TEST, struct coordi
 * @param int - count - how many pawns has the player
 */
 
-void ac_system(struct game_state*, struct game_state*);
+void ac_system(struct game_state* GS, struct game_state* TEST);
 /**
 * Function checks if any of player cheated
 * If not any horse was used, function checks if last move of a players was possible
