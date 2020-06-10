@@ -42,56 +42,56 @@ int get_multi_digit_file(FILE* fp, game_state *GS) {
 
 tile get_tile_file(FILE* fp, struct game_state* GS, int i, int j) {
 
-    tile temp;
-    int c;
-    int buffer[10]; // 3 digit tile
-    int count = 0;
+	tile temp;
+	int c;
+	int buffer[10]; // 3 digit tile
+	int count = 0;
+	int end_of_tile = 0;
 
-    do {
-        c = getc(fp);
+	do {
+		c = getc(fp);
 
-        if (c != ' ' && c != '\n' && c != EOF) {
-            if (count >= 3) {
-                //Exception
-                printf("Error in reading tile[%d][%d], tile has more than 3 digits!\n", i, j);
-                GS->error = 1;
-            }
+		if (c != ' ' && c != '\n' && c != EOF) {
+			if (count >= 3) {
+				//Exception
+				printf("Error in reading tile[%d][%d], tile has more than 3 digits!\n", i, j);
+				GS->error = 1;
+			}
 
-            buffer[count++] = c;
-        }
-        else if (count > 0) {
+			buffer[count++] = c;
+		}
+		else if (count > 0) {
+			end_of_tile = 1;
+			temp.treasure = number(buffer[0]);
+			if (temp.treasure > 5 || temp.treasure < 0) {
+				printf("Error in reading tile[%d][%d], wrong value of treasure tile!\n", i, j);
+				GS->error = 1;
+			}
+			temp.artifact = number(buffer[1]);
+			if (temp.artifact > 3 || temp.artifact < 0) {
+				printf("Error in reading tile[%d][%d], wrong value of artifact tile!\n", i, j);
+				GS->error = 1;
+			}
+			temp.occupation = number(buffer[2]);
+			if (temp.occupation > 9 || temp.occupation < 0) {
+				printf("Error in reading tile[%d][%d], wrong value of occupation tile!\n", i, j);
+				GS->error = 1;
+			}
+			if (temp.occupation != 0 && (temp.treasure != 0 || temp.artifact != 0)) {
+				printf("Occupied Tile[%d][%d], has: ", i, j);
+				if (temp.treasure != 0) {
+					printf("treasure=%d ", temp.treasure);
+				}
+				if (temp.artifact != 0) {
+					printf("artifact=%d ", temp.artifact);
+				}
+				printf("\n");
+				GS->error = 1;
+			}
+		}
+	} while (end_of_tile!=1);
 
-            temp.treasure = number(buffer[0]);
-            if (temp.treasure > 5 || temp.treasure < 0) {
-                printf("Error in reading tile[%d][%d], wrong value of treasure tile!\n", i, j);
-                GS->error = 1;
-            }
-            temp.artifact = number(buffer[1]);
-            if (temp.artifact > 3 || temp.artifact < 0) {
-                printf("Error in reading tile[%d][%d], wrong value of artifact tile!\n", i, j);
-                GS->error = 1;
-            }
-            temp.occupation = number(buffer[2]);
-            if (temp.occupation > 9 || temp.occupation < 0) {
-                printf("Error in reading tile[%d][%d], wrong value of occupation tile!\n", i, j);
-                GS->error = 1;
-            }
-            if ((temp.occupation > 0 && temp.occupation < 9)&& (temp.treasure != 0 || temp.artifact != 0)) {
-                printf("Occupied Tile[%d][%d], has: ", i, j);
-                if (temp.treasure != 0) {
-                    printf("treasure=%d ", temp.treasure);
-                }
-                if (temp.artifact != 0) {
-                    printf("artifact=%d ", temp.artifact);
-                }
-                printf("\n");
-                GS->error = 1;
-            }
-            count = 0;
-        }
-    } while (c != ' ' && c != '\n' && c != EOF);
-
-    return temp;
+	return temp;
 }
 
 void get_board_file(FILE* fp, struct game_state* GS) {
